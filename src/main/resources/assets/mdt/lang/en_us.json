@@ -1,4 +1,6 @@
 {
   "command.mdt.toggle.set.success": "Toggled %1$s to %2$s (old value: %3$s)",
-  "command.mdt.toggle.query.success": "%1$s is now toggled to %2$s"
+  "command.mdt.toggle.query.success": "%1$s is now toggled to %2$s",
+  "command.mdt.toggle.reset.success": "Reset %1$s to %2$s (old value: %3$s)",
+  "command.mdt.toggle.reset.all": "Reset all toggles"
 }
