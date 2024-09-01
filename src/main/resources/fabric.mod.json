@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "mdt",
+	"version": "${version}",
+	"name": "Minecraft Client Debug Toolkit",
+	"description": "The mod includes a set of commands to help you access Minecraft. Do NOT use ANY command if you are not sure about the consequence.",
+	"authors": [
+		"asablock"
+	],
+	"contact": {
+		"homepage": "temporarily missing",
+		"sources": "temporarily missing"
+	},
+	"license": "CC0-1.0",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"io.github.asablock.mdt.Mdt"
+		]
+	},
+	"mixins": [
+		{
+			"config": "mdt.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"accessWidener": "mdt.accesswidener",
+	"depends": {
+		"fabricloader": "*",
+		"minecraft": ">=1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+	}
+}

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "io.github.asablock.mdt.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MixinBackgroundRenderer",
+    "MixinBackgroundRendererStatusEffectFogModifier",
+    "MixinChatScreen",
+    "MixinClientPlayerEntity",
+    "MixinLightmapTextureManager",
+    "MixinWorldRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}
