@@ -1,3 +1,3 @@
-# Modders' Debug Toolkit
+# Minecraft Client Debug Toolkit
 
-The mod includes a set of tools to help you debug while modding Minecraft with Fabric.
+The mod includes several commands to help you access Minecraft. Do NOT use ANY command if you are not sure about the consequence.
