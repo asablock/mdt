@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinClientPlayerEntity {
     @Redirect(method = "canStartSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry;)Z"))
     private boolean disableBlindness(ClientPlayerEntity instance, RegistryEntry<StatusEffect> registryEntry) {
-        return !Toggles.disableBlindness.enabled && instance.hasStatusEffect(registryEntry);
+        return !Toggles.disableBlindness.get() && instance.hasStatusEffect(registryEntry);
     }
 }

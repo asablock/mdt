@@ -13,6 +13,6 @@ public abstract class MixinLightmapTextureManager {
 
     @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/LightmapTextureManager;getDarknessFactor(F)F"))
     private float disableDarkness(LightmapTextureManager instance, float delta) {
-        return Toggles.disableDarkness.enabled ? 0.0F : getDarknessFactor(delta);
+        return Toggles.disableDarkness.get() ? 0.0F : getDarknessFactor(delta);
     }
 }

@@ -13,11 +13,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinWorldRenderer {
     @Redirect(method = "hasBlindnessOrDarkness", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry;)Z", ordinal = 0))
     private boolean disableBlindness(LivingEntity instance, RegistryEntry<StatusEffect> effect) {
-        return !Toggles.disableBlindness.enabled && instance.hasStatusEffect(effect);
+        return !Toggles.disableBlindness.get() && instance.hasStatusEffect(effect);
     }
 
     @Redirect(method = "hasBlindnessOrDarkness", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry;)Z", ordinal = 1))
     private boolean disableDarkness(LivingEntity instance, RegistryEntry<StatusEffect> effect) {
-        return !Toggles.disableDarkness.enabled && instance.hasStatusEffect(effect);
+        return !Toggles.disableDarkness.get() && instance.hasStatusEffect(effect);
     }
 }

@@ -22,12 +22,12 @@ public abstract class MixinDeathScreen {
 
     @Redirect(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/DeathScreen;setButtonsActive(Z)V"))
     private void disableRespawnWait(DeathScreen instance, boolean active) {
-        if (!Toggles.disableRespawnWait.enabled) setButtonsActive(active);
+        if (!Toggles.disableRespawnWait.get()) setButtonsActive(active);
     }
 
     @Inject(method = "init", at = @At("TAIL"))
     private void addChatButton(CallbackInfo ci) {
-        if (Toggles.chatOnDeath.enabled) {
+        if (Toggles.chatOnDeath.get()) {
             DeathScreen self = (DeathScreen) (Object) this;
             ScreenInvoker screenInvoker = (ScreenInvoker) self;
             buttons.add(screenInvoker.invokeAddDrawableChild(

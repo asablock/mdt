@@ -2,26 +2,27 @@ package io.github.asablock.mdt.toggle;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.mojang.brigadier.arguments.BoolArgumentType;
+
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 public final class Toggles {
-    public static final BiMap<String, Toggle> TOGGLES = HashBiMap.create();
+    public static final BiMap<String, Toggle<?>> TOGGLES = HashBiMap.create();
 
-    public static final Toggle disableChatFieldMaxLength = of("disableChatFieldMaxLength", true);
-    public static final Toggle disableBlindness = of("disableBlindness", true);
-    public static final Toggle disableDarkness = of("disableDarkness", true);
-    public static final Toggle restrictMaxLengthForSentChat = of("restrictMaxLengthForSentChat", true);
-    public static final Toggle disableRespawnWait = of("disableRespawnWait", true);
-    public static final Toggle chatOnDeath = of("chatOnDeath", true);
+    public static final Toggle<Boolean> disableChatFieldMaxLength = ofBoolean("disableChatFieldMaxLength", true);
+    public static final Toggle<Boolean> disableBlindness = ofBoolean("disableBlindness", true);
+    public static final Toggle<Boolean> disableDarkness = ofBoolean("disableDarkness", true);
+    public static final Toggle<Boolean> restrictMaxLengthForSentChat = ofBoolean("restrictMaxLengthForSentChat", true);
+    public static final Toggle<Boolean> disableRespawnWait = ofBoolean("disableRespawnWait", true);
+    public static final Toggle<Boolean> chatOnDeath = ofBoolean("chatOnDeath", true);
 
-    private static Toggle of(String name, boolean defaultValue) {
-        Toggle toggle = new Toggle(name, defaultValue);
+    public static Toggle<Boolean> ofBoolean(String name, boolean defaultValue) {
+        Toggle<Boolean> toggle = new Toggle<>(name, defaultValue, b -> b instanceof Boolean, Toggle.doNothing(),
+                Object::toString,
+                executes -> argument("value", BoolArgumentType.bool()).executes(executes).build(),
+                ctx -> BoolArgumentType.getBool(ctx, "value"));
         TOGGLES.put(name, toggle);
         return toggle;
-    }
-
-    public static boolean isEnabled(String name) {
-        Toggle toggle = TOGGLES.get(name);
-        return toggle != null && toggle.enabled;
     }
 
     private Toggles() {

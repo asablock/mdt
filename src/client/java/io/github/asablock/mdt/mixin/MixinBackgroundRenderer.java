@@ -14,14 +14,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinBackgroundRenderer {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry;)Z", ordinal = 1))
     private static boolean disableDarkness(LivingEntity instance, RegistryEntry<StatusEffect> effect) {
-        return !Toggles.disableDarkness.enabled && instance.hasStatusEffect(effect);
+        return !Toggles.disableDarkness.get() && instance.hasStatusEffect(effect);
     }
 
     @Redirect(method = "method_42589", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer$StatusEffectFogModifier;shouldApply(Lnet/minecraft/entity/LivingEntity;F)Z"))
     private static boolean disableBlindnessAndDarkness(BackgroundRenderer.StatusEffectFogModifier instance, LivingEntity entity, float tickDelta) {
         RegistryEntry<StatusEffect> effect = instance.getStatusEffect();
-        if ((effect == StatusEffects.BLINDNESS && Toggles.disableBlindness.enabled)
-                || (effect == StatusEffects.DARKNESS && Toggles.disableDarkness.enabled)) {
+        if ((effect == StatusEffects.BLINDNESS && Toggles.disableBlindness.get())
+                || (effect == StatusEffects.DARKNESS && Toggles.disableDarkness.get())) {
             return false;
         } else {
             return instance.shouldApply(entity, tickDelta);
