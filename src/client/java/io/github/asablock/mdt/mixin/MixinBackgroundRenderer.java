@@ -1,6 +1,6 @@
 package io.github.asablock.mdt.mixin;
 
-import io.github.asablock.mdt.Toggles;
+import io.github.asablock.mdt.toggle.Toggles;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;

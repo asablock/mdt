@@ -1,4 +1,4 @@
-package io.github.asablock.mdt;
+package io.github.asablock.mdt.toggle;
 
 public class Toggle {
     public final String name;

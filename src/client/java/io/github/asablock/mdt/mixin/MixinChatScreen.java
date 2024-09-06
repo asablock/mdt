@@ -1,6 +1,6 @@
 package io.github.asablock.mdt.mixin;
 
-import io.github.asablock.mdt.Toggles;
+import io.github.asablock.mdt.toggle.Toggles;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;

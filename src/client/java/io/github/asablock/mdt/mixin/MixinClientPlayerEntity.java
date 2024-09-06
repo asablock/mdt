@@ -1,6 +1,6 @@
 package io.github.asablock.mdt.mixin;
 
-import io.github.asablock.mdt.Toggles;
+import io.github.asablock.mdt.toggle.Toggles;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.registry.entry.RegistryEntry;

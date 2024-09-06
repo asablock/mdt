@@ -5,8 +5,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import io.github.asablock.mdt.Toggle;
-import io.github.asablock.mdt.Toggles;
+import io.github.asablock.mdt.toggle.Toggle;
+import io.github.asablock.mdt.toggle.Toggles;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
 

@@ -2,5 +2,6 @@
   "command.mdt.toggle.set.success": "已将 %1$s 切换至 %2$s (之前为: %3$s)",
   "command.mdt.toggle.query.success": "%1$s 现在被切换至 %2$s",
   "command.mdt.toggle.reset.success": "已将 %1$s 重置为 %2$s (之前为: %3$s)",
-  "command.mdt.toggle.reset.all": "重置了所有切换项"
+  "command.mdt.toggle.reset.all": "重置了所有切换项",
+  "mdt.deathScreen.openChat": "打开聊天界面"
 }

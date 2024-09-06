@@ -3,11 +3,14 @@
   "package": "io.github.asablock.mdt.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "MinecraftClientInvoker",
     "MixinBackgroundRenderer",
     "MixinChatScreen",
     "MixinClientPlayerEntity",
+    "MixinDeathScreen",
     "MixinLightmapTextureManager",
-    "MixinWorldRenderer"
+    "MixinWorldRenderer",
+    "ScreenInvoker"
   ],
   "injectors": {
     "defaultRequire": 1
