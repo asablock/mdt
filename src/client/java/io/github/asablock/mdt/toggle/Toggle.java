@@ -1,8 +1,9 @@
 package io.github.asablock.mdt.toggle;
 
+import com.google.gson.JsonElement;
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.tree.CommandNode;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 import java.util.Objects;
@@ -16,25 +17,27 @@ public class Toggle<T> {
     private T value;
     private final Predicate<T> acceptable;
     private final BiConsumer<T, T> afterChanged;
+    private final JsonCodec<T> jsonCodec;
 
     // command
 
     private final Function<T, String> toStringer;
 
     // called exactly once (while building /mtoggle command)
-    private final CommandNodeFactory commandNodeFactory;
+    private final CommandArgumentAppender commandArgumentAppender;
 
     // called while /mtoggle set executes
     private final ValueParser<T> valueParser;
 
-    public Toggle(String name, T defaultValue, Predicate<T> acceptable, BiConsumer<T, T> afterChanged, Function<T, String> toStringer, CommandNodeFactory commandNodeFactory, ValueParser<T> valueParser) {
+    public Toggle(String name, T defaultValue, Predicate<T> acceptable, BiConsumer<T, T> afterChanged, JsonCodec<T> jsonCodec, Function<T, String> toStringer, CommandArgumentAppender commandArgumentAppender, ValueParser<T> valueParser) {
         Objects.requireNonNull(acceptable);
         Objects.requireNonNull(name);
         Objects.requireNonNull(defaultValue);
-        Objects.requireNonNull(commandNodeFactory);
+        Objects.requireNonNull(commandArgumentAppender);
         Objects.requireNonNull(afterChanged);
         Objects.requireNonNull(valueParser);
         Objects.requireNonNull(toStringer);
+        Objects.requireNonNull(jsonCodec);
         this.name = name;
         this.value = defaultValue;
         this.acceptable = acceptable;
@@ -43,9 +46,10 @@ public class Toggle<T> {
             throw new IllegalArgumentException("defaultValue is not acceptable");
         }
         this.defaultValue = defaultValue;
-        this.commandNodeFactory = commandNodeFactory;
+        this.commandArgumentAppender = commandArgumentAppender;
         this.valueParser = valueParser;
         this.toStringer = toStringer;
+        this.jsonCodec = jsonCodec;
     }
 
     public boolean reset() {
@@ -87,12 +91,12 @@ public class Toggle<T> {
         return toStringer.apply(value);
     }
 
-    public CommandNode<FabricClientCommandSource> createCommandNode(Command<FabricClientCommandSource> executes) {
-        return commandNodeFactory.create(executes);
+    public void appendCommandArgument(ArgumentBuilder<FabricClientCommandSource, ?> parent, Executes executes) {
+        commandArgumentAppender.append(parent, executes);
     }
 
-    public T getInputValue(CommandContext<FabricClientCommandSource> context) {
-        return valueParser.parse(context);
+    public T getInputValue(CommandContext<FabricClientCommandSource> context, int parentId) {
+        return valueParser.parse(context, parentId);
     }
 
     private static final BiConsumer<?, ?> DO_NOTHING = (a, b) -> {};
@@ -103,12 +107,54 @@ public class Toggle<T> {
     }
 
     @FunctionalInterface
-    public interface CommandNodeFactory {
-        CommandNode<FabricClientCommandSource> create(Command<FabricClientCommandSource> executes);
+    public interface CommandArgumentAppender {
+        void append(ArgumentBuilder<FabricClientCommandSource, ?> parent, Executes executes);
     }
 
     @FunctionalInterface
     public interface ValueParser<T> {
-        T parse(CommandContext<FabricClientCommandSource> context);
+        T parse(CommandContext<FabricClientCommandSource> context, int parentId);
+    }
+
+    public interface JsonCodec<T> {
+        JsonElement encode(T value);
+
+        T decode(JsonElement e);
+
+        static <E> JsonCodec<E> of(Function<E, JsonElement> encoder, Function<JsonElement, E> decoder) {
+            return new JsonCodec<>() {
+                @Override
+                public JsonElement encode(E value) {
+                    return encoder.apply(value);
+                }
+
+                @Override
+                public E decode(JsonElement e) {
+                    return decoder.apply(e);
+                }
+            };
+        }
+    }
+
+    public JsonCodec<T> getJsonCodec() {
+        return jsonCodec;
+    }
+
+    public JsonElement encodeJson() {
+        return jsonCodec.encode(value);
+    }
+
+    public void decodeJson(JsonElement source) {
+        set(jsonCodec.decode(source));
+    }
+
+    public interface Executes {
+        int ID_DIRECT = -1;
+
+        default Command<FabricClientCommandSource> direct() {
+            return withParentId(ID_DIRECT);
+        }
+
+        Command<FabricClientCommandSource> withParentId(final int id);
     }
 }

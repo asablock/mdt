@@ -15,22 +15,26 @@ public class ToggleCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         LiteralArgumentBuilder<FabricClientCommandSource> lab = literal("mtoggle");
         for (Toggle<?> toggle : Toggles.TOGGLES.values()) {
-            lab.then(literal(toggle.name).executes(new ExecuteQuery(toggle))
-                    .then(literal("reset").executes(new ExecuteReset<>(toggle)))
-                    .then(literal("set").then(toggle.createCommandNode(new ExecuteSet<>(toggle)))));
+            LiteralArgumentBuilder<FabricClientCommandSource> l =
+                    literal(toggle.name).executes(new ExecuteQuery(toggle))
+                            .then(literal("reset").executes(new ExecuteReset<>(toggle)));
+            toggle.appendCommandArgument(l, new ExecutesSet<>(toggle));
+            lab.then(l);
         }
-        lab.then(literal("resetall").executes(ToggleCommand::resetAll));
+        lab.then(literal("resetall").executes(ToggleCommand::executeResetAll));
         dispatcher.register(lab);
     }
 
-    private record ExecuteSet<T>(Toggle<T> toggle) implements Command<FabricClientCommandSource> {
+    private record ExecutesSet<T>(Toggle<T> toggle) implements Toggle.Executes {
         @Override
-        public int run(CommandContext<FabricClientCommandSource> context) {
-            T value = toggle.getInputValue(context);
-            T old = toggle.get();
-            Boolean b = toggle.set(value);
-            context.getSource().sendFeedback(Text.translatable("command.mdt.toggle.set.success", toggle.name, toggle.toString(value), toggle.toString(old)));
-            return b == null ? 0 : (b ? 2 : 1);
+        public Command<FabricClientCommandSource> withParentId(final int id) {
+            return context -> {
+                T value = toggle.getInputValue(context, id);
+                T old = toggle.get();
+                Boolean b = toggle.set(value);
+                context.getSource().sendFeedback(Text.translatable("command.mdt.toggle.set.success", toggle.name, toggle.toString(value), toggle.toString(old)));
+                return b == null ? 0 : (b ? 2 : 1);
+            };
         }
     }
 
@@ -53,11 +57,9 @@ public class ToggleCommand {
         }
     }
 
-    private static int resetAll(CommandContext<FabricClientCommandSource> context) {
-        for (Toggle<?> value : Toggles.TOGGLES.values()) {
-            value.reset();
-        }
-        context.getSource().sendFeedback(Text.translatable("command.mdt.toggle.reset.all"));
-        return 1;
+    private static int executeResetAll(CommandContext<FabricClientCommandSource> context) {
+        int mods = Toggles.resetAll();
+        context.getSource().sendFeedback(Text.translatable("command.mdt.toggle.reset.all", mods));
+        return mods;
     }
 }

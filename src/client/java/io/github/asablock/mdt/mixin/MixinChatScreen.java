@@ -13,11 +13,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinChatScreen {
     @ModifyConstant(method = "init", constant = @Constant(intValue = 256))
     private int disableChatMaxLength(int value) {
-        return Toggles.disableChatFieldMaxLength.get() ? Integer.MAX_VALUE : value;
+        return Toggles.chatMaxLengthBehavior.get().shallRestrictFieldMaxLength() ? value : Integer.MAX_VALUE;
     }
 
     @Redirect(method = "sendMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendChatMessage(Ljava/lang/String;)V"))
     private void sendChatMessageRestrict(ClientPlayNetworkHandler instance, String content) {
-        instance.sendChatMessage(Toggles.restrictMaxLengthForSentChat.get() ? content.substring(0, 256) : content);
+        instance.sendChatMessage(Toggles.chatMaxLengthBehavior.get().shallRestrictAfterSending() ? content.substring(0, 256) : content);
     }
 }

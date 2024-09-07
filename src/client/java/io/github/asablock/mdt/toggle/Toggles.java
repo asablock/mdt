@@ -2,27 +2,30 @@ package io.github.asablock.mdt.toggle;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.mojang.brigadier.arguments.BoolArgumentType;
+import io.github.asablock.mdt.toggle.enums.ChatMaxLengthBehavior;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
+import static io.github.asablock.mdt.toggle.ToggleFactory.*;
 
 public final class Toggles {
     public static final BiMap<String, Toggle<?>> TOGGLES = HashBiMap.create();
 
-    public static final Toggle<Boolean> disableChatFieldMaxLength = ofBoolean("disableChatFieldMaxLength", true);
-    public static final Toggle<Boolean> disableBlindness = ofBoolean("disableBlindness", true);
-    public static final Toggle<Boolean> disableDarkness = ofBoolean("disableDarkness", true);
-    public static final Toggle<Boolean> restrictMaxLengthForSentChat = ofBoolean("restrictMaxLengthForSentChat", true);
-    public static final Toggle<Boolean> disableRespawnWait = ofBoolean("disableRespawnWait", true);
-    public static final Toggle<Boolean> chatOnDeath = ofBoolean("chatOnDeath", true);
+    public static final Toggle<ChatMaxLengthBehavior> chatMaxLengthBehavior = reg(ofEnum("chatMaxLengthBehavior", ChatMaxLengthBehavior.RESTRICTED_AFTER_SENDING, ChatMaxLengthBehavior.class));
+    public static final Toggle<Boolean> disableBlindness = reg(ofBool("disableBlindness", true));
+    public static final Toggle<Boolean> disableDarkness = reg(ofBool("disableDarkness", true));
+    public static final Toggle<Boolean> disableRespawnWait = reg(ofBool("disableRespawnWait", true));
+    public static final Toggle<Boolean> chatOnDeath = reg(ofBool("chatOnDeath", true));
 
-    public static Toggle<Boolean> ofBoolean(String name, boolean defaultValue) {
-        Toggle<Boolean> toggle = new Toggle<>(name, defaultValue, b -> b instanceof Boolean, Toggle.doNothing(),
-                Object::toString,
-                executes -> argument("value", BoolArgumentType.bool()).executes(executes).build(),
-                ctx -> BoolArgumentType.getBool(ctx, "value"));
-        TOGGLES.put(name, toggle);
+    public static <E> Toggle<E> reg(Toggle<E> toggle) {
+        TOGGLES.put(toggle.name, toggle);
         return toggle;
+    }
+
+    public static int resetAll() {
+        int modifications = 0;
+        for (Toggle<?> value : Toggles.TOGGLES.values()) {
+            if (value.reset()) modifications++;
+        }
+        return modifications;
     }
 
     private Toggles() {
