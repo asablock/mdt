@@ -9,6 +9,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -20,8 +22,8 @@ public class Mdt implements ClientModInitializer {
 	public void onInitializeClient() {
 		config = FabricLoader.getInstance().getConfigDir().resolve("mdt.json");
 		if (Files.exists(config)) {
-            try {
-                ToggleSerializer.readToggles(Files.newBufferedReader(config));
+            try (BufferedReader br = Files.newBufferedReader(config)) {
+                ToggleSerializer.readToggles(br);
             } catch (Exception e) {
                 LOGGER.error("Cannot read config", e);
             }
@@ -33,8 +35,8 @@ public class Mdt implements ClientModInitializer {
 			RespawnCommand.register(dispatcher);
 		});
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
-            try {
-                ToggleSerializer.saveToggles(Files.newBufferedWriter(config));
+            try (BufferedWriter bw = Files.newBufferedWriter(config)) {
+                ToggleSerializer.saveToggles(bw);
             } catch (Exception e) {
                 LOGGER.error("Cannot save config", e);
             }
