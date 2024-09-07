@@ -18,6 +18,6 @@ public class MixinChatScreen {
 
     @Redirect(method = "sendMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendChatMessage(Ljava/lang/String;)V"))
     private void sendChatMessageRestrict(ClientPlayNetworkHandler instance, String content) {
-        instance.sendChatMessage(Toggles.chatMaxLengthBehavior.get().shallRestrictAfterSending() ? content.substring(0, 256) : content);
+        instance.sendChatMessage(Toggles.chatMaxLengthBehavior.get().shallRestrictAfterSending() ? (content.length() > 256 ? content.substring(0, 256) : content) : content);
     }
 }
