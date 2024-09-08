@@ -4,10 +4,19 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.asablock.mdt.IOUtil;
+import io.github.asablock.mdt.Mdt;
 import io.github.asablock.mdt.toggle.Toggle;
+import io.github.asablock.mdt.toggle.ToggleSerializer;
 import io.github.asablock.mdt.toggle.Toggles;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
@@ -21,7 +30,9 @@ public class ToggleCommand {
             toggle.appendCommandArgument(l, new ExecutesSet<>(toggle));
             lab.then(l);
         }
-        lab.then(literal("resetall").executes(ToggleCommand::executeResetAll));
+        lab.then(literal("resetall").executes(ToggleCommand::executeResetAll))
+                .then(literal("reload").executes(ToggleCommand::executeReload))
+                .then(literal("save").executes(ToggleCommand::executeSave));
         dispatcher.register(lab);
     }
 
@@ -61,5 +72,27 @@ public class ToggleCommand {
         int mods = Toggles.resetAll();
         context.getSource().sendFeedback(Text.translatable("command.mdt.toggle.reset.all", mods));
         return mods;
+    }
+
+    private static int executeReload(CommandContext<FabricClientCommandSource> context) {
+        try (BufferedReader br = Files.newBufferedReader(Mdt.config)) {
+            ToggleSerializer.readToggles(br);
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace(new PrintWriter(IOUtil.getTextWriter(context.getSource()::sendError)));
+            Mdt.LOGGER.error("Cannot read config", e);
+            return 0;
+        }
+    }
+
+    private static int executeSave(CommandContext<FabricClientCommandSource> context) {
+        try (BufferedWriter bw = Files.newBufferedWriter(Mdt.config)) {
+            ToggleSerializer.saveToggles(bw);
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace(new PrintWriter(IOUtil.getTextWriter(context.getSource()::sendError)));
+            Mdt.LOGGER.error("Cannot save config", e);
+            return 0;
+        }
     }
 }
