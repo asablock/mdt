@@ -11,8 +11,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class Toggle<T> {
-    public final String name;
+public final class Toggle<T> extends ToggleNode {
     public final T defaultValue;
     private T value;
     private final Predicate<T> acceptable;
@@ -29,16 +28,15 @@ public class Toggle<T> {
     // called while /mtoggle set executes
     private final ValueParser<T> valueParser;
 
-    public Toggle(String name, T defaultValue, Predicate<T> acceptable, BiConsumer<T, T> afterChanged, JsonCodec<T> jsonCodec, Function<T, String> toStringer, CommandArgumentAppender commandArgumentAppender, ValueParser<T> valueParser) {
+    public Toggle(ToggleDirectory parent, String name, T defaultValue, Predicate<T> acceptable, BiConsumer<T, T> afterChanged, JsonCodec<T> jsonCodec, Function<T, String> toStringer, CommandArgumentAppender commandArgumentAppender, ValueParser<T> valueParser) {
+        super(parent, name);
         Objects.requireNonNull(acceptable);
-        Objects.requireNonNull(name);
         Objects.requireNonNull(defaultValue);
         Objects.requireNonNull(commandArgumentAppender);
         Objects.requireNonNull(afterChanged);
         Objects.requireNonNull(valueParser);
         Objects.requireNonNull(toStringer);
         Objects.requireNonNull(jsonCodec);
-        this.name = name;
         this.value = defaultValue;
         this.acceptable = acceptable;
         this.afterChanged = afterChanged;
@@ -52,8 +50,9 @@ public class Toggle<T> {
         this.jsonCodec = jsonCodec;
     }
 
-    public boolean reset() {
-        return set(defaultValue);
+    @Override
+    public int reset() {
+        return Boolean.TRUE.equals(set(defaultValue)) ? 1 : 0;
     }
 
     /**
@@ -140,12 +139,24 @@ public class Toggle<T> {
         return jsonCodec;
     }
 
+    @Override
     public JsonElement encodeJson() {
         return jsonCodec.encode(value);
     }
 
+    @Override
     public void decodeJson(JsonElement source) {
         set(jsonCodec.decode(source));
+    }
+
+    @Override
+    protected void insert(StringBuilder sb) {
+        sb.insert(0, getSimpleName());
+    }
+
+    @Override
+    public Toggle<?> getAsToggle() {
+        return this;
     }
 
     public interface Executes {

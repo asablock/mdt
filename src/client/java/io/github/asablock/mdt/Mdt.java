@@ -1,11 +1,13 @@
 package io.github.asablock.mdt;
 
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.asablock.mdt.command.*;
 import io.github.asablock.mdt.toggle.ToggleSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ import java.nio.file.Path;
 
 public class Mdt implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Minecraft Client Debug Toolkit");
+	public static final SimpleCommandExceptionType LINE_SEPARATOR_EXCEPTION = new SimpleCommandExceptionType(Text.translatable("command.mdt.lineSeparator"));
 	public static Path config;
 
 	@Override
@@ -33,6 +36,7 @@ public class Mdt implements ClientModInitializer {
 			SendChatCommand.register(dispatcher);
 			ToggleCommand.register(dispatcher);
 			RespawnCommand.register(dispatcher);
+			JavaShellCommand.register(dispatcher);
 		});
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
             try (BufferedWriter bw = Files.newBufferedWriter(config)) {

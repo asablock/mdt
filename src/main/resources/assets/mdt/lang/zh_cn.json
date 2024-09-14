@@ -1,7 +1,15 @@
 {
+  "command.mdt.lineSeparator": "==========================",
   "command.mdt.toggle.set.success": "已将 %1$s 切换至 %2$s (之前为: %3$s)",
   "command.mdt.toggle.query.success": "%1$s 现在被切换至 %2$s",
   "command.mdt.toggle.reset.success": "已将 %1$s 重置为 %2$s (之前为: %3$s)",
   "command.mdt.toggle.reset.all": "重置了所有切换项 (%1$s 项修改)",
+  "command.mdt.javashell.warning": "\u00a7e切换项 javaShell.enabled 现在被禁用，因此你不能使用/mjavashell。不要开启它，除非你清楚地知道你在做什么。一切风险自负。此命令使用 JDK 自带的 JShell 实现。",
+  "command.mdt.javashell.starting": "正在启动 Java Shell",
+  "command.mdt.javashell.exit": "Java Shell 退出 (代码: %1$s)",
+  "command.mdt.javashell.exception": "Java Shell 运行时发生意外的异常:",
+  "command.mdt.javashell.status_running": "Java Shell 状态: 运行中",
+  "command.mdt.javashell.status_not_started": "Java Shell 状态: 未启动",
+  "toggle.mdt.javaShell.immersiveMode.afterChanged": "沉浸模式已开启。要退出沉浸模式，输入 \u00a7emdt.shell.api.Mdts.immersiveMode(false);",
   "mdt.deathScreen.openChat": "打开聊天界面"
 }
