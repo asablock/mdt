@@ -62,7 +62,7 @@ public final class Toggle<T> extends ToggleNode {
      */
     public Boolean set(T value) {
         if (canAccept(value)) {
-            if (this.value.equals(value)) {
+            if (!this.value.equals(value)) {
                 T old = this.value;
                 this.value = value;
                 afterChanged.accept(old, value);
