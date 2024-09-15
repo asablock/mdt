@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 import java.util.Objects;
@@ -94,7 +95,7 @@ public final class Toggle<T> extends ToggleNode {
         commandArgumentAppender.append(parent, executes);
     }
 
-    public T getInputValue(CommandContext<FabricClientCommandSource> context, int parentId) {
+    public T getInputValue(CommandContext<FabricClientCommandSource> context, int parentId) throws CommandSyntaxException {
         return valueParser.parse(context, parentId);
     }
 
@@ -112,7 +113,7 @@ public final class Toggle<T> extends ToggleNode {
 
     @FunctionalInterface
     public interface ValueParser<T> {
-        T parse(CommandContext<FabricClientCommandSource> context, int parentId);
+        T parse(CommandContext<FabricClientCommandSource> context, int parentId) throws CommandSyntaxException;
     }
 
     public interface JsonCodec<T> {
@@ -120,7 +121,7 @@ public final class Toggle<T> extends ToggleNode {
 
         T decode(JsonElement e);
 
-        static <E> JsonCodec<E> of(Function<E, JsonElement> encoder, Function<JsonElement, E> decoder) {
+        static <E> JsonCodec<E> of(final Function<E, JsonElement> encoder, final Function<JsonElement, E> decoder) {
             return new JsonCodec<>() {
                 @Override
                 public JsonElement encode(E value) {
@@ -155,7 +156,7 @@ public final class Toggle<T> extends ToggleNode {
     }
 
     @Override
-    public Toggle<?> getAsToggle() {
+    public Toggle<T> getAsToggle() {
         return this;
     }
 

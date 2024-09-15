@@ -19,6 +19,6 @@ public class ToggleSerializer {
     public static void readToggles(Reader reader) throws JsonIOException, JsonSyntaxException {
         JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
 
-        Toggles.root.decodeJson(root.getAsJsonObject("toggles"));
+        Toggles.root.decodeJson(root.get("toggles"));
     }
 }

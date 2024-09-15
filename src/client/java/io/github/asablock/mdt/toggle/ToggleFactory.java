@@ -3,6 +3,9 @@ package io.github.asablock.mdt.toggle;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import net.minecraft.text.Text;
 import net.minecraft.util.StringIdentifiable;
 
 import java.util.Arrays;
@@ -15,6 +18,10 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 import static io.github.asablock.mdt.toggle.Toggle.JsonCodec.of;
 
 public class ToggleFactory {
+    public static ToggleDirectory ofDir(ToggleDirectory parent, String name) {
+        return new ToggleDirectory(parent, name);
+    }
+
     public static Toggle<Boolean> ofBool(ToggleDirectory parent, String name, boolean defaultValue) {
         return new Toggle<>(parent, name, defaultValue, b -> b instanceof Boolean, Toggle.doNothing(),
                 of(JsonPrimitive::new, JsonElement::getAsBoolean), Object::toString,
@@ -51,7 +58,33 @@ public class ToggleFactory {
                 }, (context, parentId) -> es[parentId]);
     }
 
-    public static ToggleDirectory ofDir(ToggleDirectory parent, String name) {
-        return new ToggleDirectory(parent, name);
+    private static final SimpleCommandExceptionType NOT_QUOTED_STRING_EXCEPTION = new SimpleCommandExceptionType(Text.translatable("command.mdt.toggle.not_quoted_string"));
+
+    public static Toggle<String> ofQuotedString(ToggleDirectory parent, String name, String defaultValue) {
+        return new Toggle<>(parent, name, defaultValue, s -> s instanceof String, Toggle.doNothing(),
+                of(JsonPrimitive::new, JsonElement::getAsString), Function.identity(),
+                (p, executes) -> p.then(argument("value", StringArgumentType.greedyString()).executes(executes.direct())),
+                (context, parentId) -> {
+                    String str = StringArgumentType.getString(context, "value");
+                    if (str.length() >= 2 && str.startsWith("\"") && str.endsWith("\"")) {
+                        return str.substring(1, str.length() - 1);
+                    } else {
+                        throw NOT_QUOTED_STRING_EXCEPTION.create();
+                    }
+                });
+    }
+
+    public static Toggle<String> ofQuotedString(ToggleDirectory parent, String name, String defaultValue, BiConsumer<String, String> afterChanged) {
+        return new Toggle<>(parent, name, defaultValue, s -> s instanceof String, afterChanged,
+                of(JsonPrimitive::new, JsonElement::getAsString), Function.identity(),
+                (p, executes) -> p.then(argument("value", StringArgumentType.greedyString()).executes(executes.direct())),
+                (context, parentId) -> {
+                    String str = StringArgumentType.getString(context, "value");
+                    if (str.length() >= 2 && str.startsWith("\"") && str.endsWith("\"")) {
+                        return str.substring(1, str.length() - 1);
+                    } else {
+                        throw NOT_QUOTED_STRING_EXCEPTION.create();
+                    }
+                });
     }
 }

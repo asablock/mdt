@@ -4,6 +4,7 @@
   "command.mdt.toggle.query.success": "%1$s is now toggled to %2$s",
   "command.mdt.toggle.reset.success": "Reset %1$s to %2$s (old value: %3$s)",
   "command.mdt.toggle.reset.all": "Reset all toggles (%1$s modification(s))",
+  "command.mdt.toggle.not_quoted_string": "The string value must be surrounded by \"",
   "command.mdt.javashell.warning": "\u00a7eToggle \"javaShell.enabled\" is now off so you can't use /mjavashell. Do NEVER turn it on unless you clearly know what you are doing. Everything is at your own risk. The command implementation delegates to JShell contained in JDK.",
   "command.mdt.javashell.starting": "Starting Java Shell",
   "command.mdt.javashell.exit": "Java Shell exit with code %1$s",
