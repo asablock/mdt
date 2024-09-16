@@ -3,6 +3,7 @@ package io.github.asablock.mdt;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.asablock.mdt.command.*;
 import io.github.asablock.mdt.toggle.ToggleSerializer;
+import io.github.asablock.mdt.toggle.Toggles;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -23,6 +24,8 @@ public class Mdt implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		Toggles.init();
+
 		config = FabricLoader.getInstance().getConfigDir().resolve("mdt.json");
 		if (Files.exists(config)) {
             try (BufferedReader br = Files.newBufferedReader(config)) {

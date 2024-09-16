@@ -11,6 +11,7 @@
   "command.mdt.javashell.exception": "Java Shell 运行时发生意外的异常:",
   "command.mdt.javashell.status_running": "Java Shell 状态: 运行中",
   "command.mdt.javashell.status_not_started": "Java Shell 状态: 未启动",
+  "command.mdt.javashell.unavailable": "Java Shell 目前不可用。请检查你的 Java 运行时环境。",
   "toggle.mdt.javaShell.immersiveMode.afterChanged": "沉浸模式已开启。要退出沉浸模式，输入 \u00a7emdt.shell.api.Mdts.immersiveMode(false);",
   "mdt.deathScreen.openChat": "打开聊天界面"
 }

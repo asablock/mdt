@@ -47,4 +47,7 @@ public final class Toggles {
 
     private Toggles() {
     }
+
+    public static void init() {
+    }
 }

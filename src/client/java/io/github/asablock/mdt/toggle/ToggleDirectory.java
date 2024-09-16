@@ -29,7 +29,7 @@ public sealed class ToggleDirectory extends ToggleNode permits ToggleDirectory.R
         for (ToggleNode subNode : subNodes) {
             root.add(subNode.getSimpleName(), subNode.encodeJson());
         }
-        return null;
+        return root;
     }
 
     @Override

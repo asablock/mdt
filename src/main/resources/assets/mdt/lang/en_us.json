@@ -11,6 +11,7 @@
   "command.mdt.javashell.exception": "Unexpected exception thrown while Java Shell running:",
   "command.mdt.javashell.status_running": "Java Shell status: Running",
   "command.mdt.javashell.status_not_started": "Java Shell status: Not Started",
+  "command.mdt.javashell.unavailable": "Java Shell is currently unavailable. Please check your Java Runtime Environment.",
   "toggle.mdt.javaShell.immersiveMode.afterChanged": "Immersive mode on. To exit immersive mode, use \u00a7emdt.shell.api.Mdts.immersiveMode(false);",
   "mdt.deathScreen.openChat": "Open Chat Screen"
 }
