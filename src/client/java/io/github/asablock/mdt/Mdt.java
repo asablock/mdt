@@ -40,6 +40,7 @@ public class Mdt implements ClientModInitializer {
 			ToggleCommand.register(dispatcher);
 			RespawnCommand.register(dispatcher);
 			JavaShellCommand.register(dispatcher);
+			DisconnectCommand.register(dispatcher);
 		});
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
             try (BufferedWriter bw = Files.newBufferedWriter(config)) {
@@ -48,5 +49,10 @@ public class Mdt implements ClientModInitializer {
                 LOGGER.error("Cannot save config", e);
             }
         });
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T cast(Object o) {
+		return (T) o;
 	}
 }

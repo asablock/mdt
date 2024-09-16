@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.mixin;
 
+import io.github.asablock.mdt.Mdt;
 import io.github.asablock.mdt.toggle.Toggles;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.DeathScreen;
@@ -34,7 +35,7 @@ public abstract class MixinDeathScreen extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void addChatButton(CallbackInfo ci) {
         if (Toggles.chatOnDeath.get()) {
-            DeathScreen self = (DeathScreen) (Object) this;
+            DeathScreen self = Mdt.cast(this);
             ScreenInvoker screenInvoker = (ScreenInvoker) self;
             buttons.add(screenInvoker.invokeAddDrawableChild(
                     ButtonWidget.builder(Text.translatable("mdt.deathScreen.openChat"),
@@ -50,16 +51,15 @@ public abstract class MixinDeathScreen extends Screen {
         if (!Toggles.disableRespawnWait.get()) instance.disableButtons(ticks);
     }
 
-    @Redirect(method = "method_47939", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/DeathScreen;quitLevel()V"))
-    private void returnToDeathScreen(DeathScreen instance) {
+    @Inject(method = "method_47939", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;requestRespawn()V"), cancellable = true)
+    private void returnToDeathScreen(boolean confirmed, CallbackInfo ci) {
         if (Toggles.chatOnDeath.get()) {
             client.setScreen(this);
-        } else {
-            quitLevel();
+            ci.cancel();
         }
     }
 
-    @ModifyConstant(method = "onTitleScreenButtonClicked", constant = @Constant(stringValue = "deathScreen.titleScreen"))
+    @ModifyConstant(method = "onTitleScreenButtonClicked", constant = @Constant(stringValue = "deathScreen.respawn"))
     private String modifyButtonName(String constant) {
         return Toggles.chatOnDeath.get() ? "gui.cancel" : constant;
     }
