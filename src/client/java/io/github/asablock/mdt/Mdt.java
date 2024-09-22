@@ -39,7 +39,6 @@ public class Mdt implements ClientModInitializer {
 			SendChatCommand.register(dispatcher);
 			ToggleCommand.register(dispatcher);
 			RespawnCommand.register(dispatcher);
-			JavaShellCommand.register(dispatcher);
 			DisconnectCommand.register(dispatcher);
 		});
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {

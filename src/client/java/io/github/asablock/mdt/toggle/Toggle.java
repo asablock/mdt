@@ -169,4 +169,9 @@ public final class Toggle<T> extends ToggleNode {
 
         Command<FabricClientCommandSource> withParentId(final int id);
     }
+
+    @Override
+    public String toString() {
+        return "Toggle[name=" + getName() + ",value=" + valueToString() + ",parent=" + getParent().getName() + ']';
+    }
 }

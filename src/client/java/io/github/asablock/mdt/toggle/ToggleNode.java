@@ -39,6 +39,10 @@ public abstract sealed class ToggleNode permits Toggle, ToggleDirectory {
         return name;
     }
 
+    public final ToggleDirectory getParent() {
+        return parent;
+    }
+
     public abstract int reset();
 
     public ToggleDirectory getAsDirectory() {
@@ -47,5 +51,10 @@ public abstract sealed class ToggleNode permits Toggle, ToggleDirectory {
 
     public Toggle<?> getAsToggle() {
         throw new ClassCastException("Cannot cast to Toggle<?>");
+    }
+
+    @Override
+    public String toString() {
+        return "ToggleNode[name=" + name + ",parent=" + parent.getName() + ']';
     }
 }

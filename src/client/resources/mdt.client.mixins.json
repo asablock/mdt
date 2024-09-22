@@ -3,6 +3,7 @@
   "package": "io.github.asablock.mdt.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "ClientPlayNetworkHandlerAccessor",
     "MinecraftClientInvoker",
     "MixinBackgroundRenderer",
     "MixinChatScreen",

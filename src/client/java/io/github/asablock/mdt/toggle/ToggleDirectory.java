@@ -2,6 +2,7 @@ package io.github.asablock.mdt.toggle;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import io.github.asablock.mdt.Mdt;
 
 import java.util.*;
 
@@ -36,7 +37,12 @@ public sealed class ToggleDirectory extends ToggleNode permits ToggleDirectory.R
     public void decodeJson(JsonElement source) {
         JsonObject root = source.getAsJsonObject();
         for (ToggleNode subNode : subNodes) {
-            subNode.decodeJson(root.get(subNode.getSimpleName()));
+            JsonElement e = root.get(subNode.getSimpleName());
+            if (e != null) {
+                subNode.decodeJson(e);
+            } else {
+                Mdt.LOGGER.warn("{} is not found in the source", subNode.getName());
+            }
         }
     }
 
@@ -71,5 +77,10 @@ public sealed class ToggleDirectory extends ToggleNode permits ToggleDirectory.R
         @Override
         protected void insert(StringBuilder sb) {
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ToggleDirectory[name=" + getName() + ",parent=" + getParent().getName() + ']';
     }
 }
