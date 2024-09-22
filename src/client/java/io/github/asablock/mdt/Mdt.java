@@ -40,6 +40,7 @@ public class Mdt implements ClientModInitializer {
 			ToggleCommand.register(dispatcher);
 			RespawnCommand.register(dispatcher);
 			DisconnectCommand.register(dispatcher);
+			SystemCommand.register(dispatcher);
 		});
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
             try (BufferedWriter bw = Files.newBufferedWriter(config)) {

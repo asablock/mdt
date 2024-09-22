@@ -5,13 +5,6 @@
   "command.mdt.toggle.reset.success": "Reset %1$s to %2$s (old value: %3$s)",
   "command.mdt.toggle.reset.all": "Reset all toggles (%1$s modification(s))",
   "command.mdt.toggle.not_quoted_string": "The string value must be surrounded by \"",
-  "command.mdt.javashell.warning": "\u00a7eToggle \"javaShell.enabled\" is now off so you can't use /mjavashell. Do NEVER turn it on unless you clearly know what you are doing. Everything is at your own risk. The command implementation delegates to JShell contained in JDK.",
-  "command.mdt.javashell.starting": "Starting Java Shell",
-  "command.mdt.javashell.exit": "Java Shell exit with code %1$s",
-  "command.mdt.javashell.exception": "Unexpected exception thrown while Java Shell running:",
-  "command.mdt.javashell.status_running": "Java Shell status: Running",
-  "command.mdt.javashell.status_not_started": "Java Shell status: Not Started",
-  "command.mdt.javashell.unavailable": "Java Shell is currently unavailable. Please check your Java Runtime Environment.",
-  "toggle.mdt.javaShell.immersiveMode.afterChanged": "Immersive mode on. To exit immersive mode, use \u00a7emdt.shell.api.Mdts.immersiveMode(false);",
+  "command.mdt.system.currentTimeMillis": "Current time in milliseconds: %1$s",
   "mdt.deathScreen.openChat": "Open Chat Screen"
 }
