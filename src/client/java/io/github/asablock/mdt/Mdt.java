@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -22,11 +24,18 @@ public class Mdt implements ClientModInitializer {
 	public static final SimpleCommandExceptionType LINE_SEPARATOR_EXCEPTION = new SimpleCommandExceptionType(Text.translatable("command.mdt.lineSeparator"));
 	public static Path config;
 
+	public static final PrintStream LOGGER_OUT_PRINT_STREAM = System.out;
+	public static final PrintStream LOGGER_ERROR_PRINT_STREAM = System.err;
+	public static final InputStream SYSIN = System.in;
+	// These are initialized a little bit earlier than config loading (replaces them)
+
 	@Override
 	public void onInitializeClient() {
+		// Initialize toggles
 		Toggles.init();
 
 		config = FabricLoader.getInstance().getConfigDir().resolve("mdt.json");
+		// Load config
 		if (Files.exists(config)) {
             try (BufferedReader br = Files.newBufferedReader(config)) {
                 ToggleSerializer.readToggles(br);
@@ -35,6 +44,10 @@ public class Mdt implements ClientModInitializer {
             }
         }
 
+		// Redirect System.in
+		System.setIn(SystemCommand.SYSIN);
+
+		// Register commands
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			SendChatCommand.register(dispatcher);
 			ToggleCommand.register(dispatcher);
@@ -42,6 +55,8 @@ public class Mdt implements ClientModInitializer {
 			DisconnectCommand.register(dispatcher);
 			SystemCommand.register(dispatcher);
 		});
+
+		// Save config on client stop
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
             try (BufferedWriter bw = Files.newBufferedWriter(config)) {
                 ToggleSerializer.saveToggles(bw);

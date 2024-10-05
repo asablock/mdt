@@ -15,8 +15,8 @@ public abstract sealed class ToggleNode permits Toggle, ToggleDirectory {
         this.parent = parent;
         if (this.parent != null) this.parent.add(this);
 
-        StringBuilder sb = new StringBuilder();
-        insert0(sb);
+        StringBuilder sb = new StringBuilder(this.simpleName);
+        if (parent != null) ((ToggleNode) parent).insert0(sb);
         this.name = sb.toString();
     }
 

@@ -68,6 +68,14 @@ public class ToggleCommand {
         }
     }
 
+    private record ExecuteDescription(Toggle<?> toggle) implements Command<FabricClientCommandSource> {
+        @Override
+        public int run(CommandContext<FabricClientCommandSource> context) {
+            context.getSource().sendFeedback(Text.literal(toggle.getName() + ": ").append(toggle.getDescription()));
+            return 1;
+        }
+    }
+
     private static int executeResetAll(CommandContext<FabricClientCommandSource> context) {
         int mods = Toggles.resetAll();
         context.getSource().sendFeedback(Text.translatable("command.mdt.toggle.reset.all", mods));

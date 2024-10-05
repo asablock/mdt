@@ -6,5 +6,19 @@
   "command.mdt.toggle.reset.all": "重置了所有切换项 (%1$s 项修改)",
   "command.mdt.toggle.not_quoted_string": "字符串值必须在两侧用 \" 括起来",
   "command.mdt.system.currentTimeMillis": "当前时间 (毫秒): %1$s",
-  "mdt.deathScreen.openChat": "打开聊天界面"
+  "command.mdt.jshell.reflection_failed": "无法获取 JShell 的反射对象。请检查 JRE。",
+  "command.mdt.jshell.already_started": "JShell 已经启动了",
+  "command.mdt.jshell.cannot_start_jshell": "无法启动 JShell。请检查 JRE。",
+  "command.mdt.jshell.starting": "正在启动 JShell",
+  "command.mdt.jshell.not_started_yet": "JShell 还未启动。请使用 /mjshell init。",
+  "command.mdt.jshell.reflection_error": "调用 JShell 时出现反射错误",
+  "command.mdt.jshell.stopped": "JShell 已停止",
+  "mdt.deathScreen.openChat": "打开聊天界面",
+  "command.mdt.toggle.description.chatMaxLengthBehavior": "控制聊天最大长度的行为。\n - unlimited: 聊天输入无限制。然而，由于游戏网络并不支持 256 字符以上的聊天输入，服务器将会由于无效数据包将您踢出。\n - limited: 聊天长度被限制在 256 字符以内 (原版行为)。\n - restrictedAfterSending: 聊天输入框长度是无限制的，但是为了防止被踢出，聊天发送后会被截断至 256 字符。这是为了客户端命令制作的，因为它们可能支持长的命令。",
+  "command.mdt.toggle.description.disableBlindness": "如果为 true，失明效果将不会影响玩家视野，也不会阻止玩家疾跑。如果为 false，失明效果保持原版行为。",
+  "command.mdt.toggle.description.disableDarkness": "如果为 true，黑暗效果将不会影响玩家视野。如果为 false，黑暗效果保持原版行为。",
+  "command.mdt.toggle.description.disableRespawnWait": "如果为 true，死亡屏幕中的按钮在玩家死后会立刻启用。如果为 false，按钮将在玩家死后的第一秒内禁用 (原版行为)。",
+  "command.mdt.toggle.description.chatOnDeath": "如果为 true，在玩家死后会有一个打开聊天界面的按钮。",
+  "command.mdt.toggle.description.sysio.sendSysOutToChat": "如果为 true，System.out 打印流中的消息会被发送至聊天中。",
+  "command.mdt.toggle.description.sysio.sendSysErrToChat": "如果为 true，System.err 打印流中的消息会被以红色字体发送至聊天中。"
 }

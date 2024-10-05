@@ -6,6 +6,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.text.Text;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -19,8 +20,9 @@ public final class Toggle<T> extends ToggleNode {
     private final BiConsumer<T, T> afterChanged;
     private final JsonCodec<T> jsonCodec;
 
-    // command
+    private final Text description;
 
+    // command
     private final Function<T, String> toStringer;
 
     // called exactly once (while building /mtoggle command)
@@ -29,8 +31,8 @@ public final class Toggle<T> extends ToggleNode {
     // called while /mtoggle set executes
     private final ValueParser<T> valueParser;
 
-    public Toggle(ToggleDirectory parent, String name, T defaultValue, Predicate<T> acceptable, BiConsumer<T, T> afterChanged, JsonCodec<T> jsonCodec, Function<T, String> toStringer, CommandArgumentAppender commandArgumentAppender, ValueParser<T> valueParser) {
-        super(parent, name);
+    public Toggle(ToggleDirectory parent, String simpleName, T defaultValue, Predicate<T> acceptable, BiConsumer<T, T> afterChanged, JsonCodec<T> jsonCodec, Function<T, String> toStringer, CommandArgumentAppender commandArgumentAppender, ValueParser<T> valueParser) {
+        super(parent, simpleName);
         Objects.requireNonNull(acceptable);
         Objects.requireNonNull(defaultValue);
         Objects.requireNonNull(commandArgumentAppender);
@@ -38,17 +40,26 @@ public final class Toggle<T> extends ToggleNode {
         Objects.requireNonNull(valueParser);
         Objects.requireNonNull(toStringer);
         Objects.requireNonNull(jsonCodec);
-        this.value = defaultValue;
-        this.acceptable = acceptable;
-        this.afterChanged = afterChanged;
+
+        // check acceptability of defaultValue
         if (!acceptable.test(defaultValue)) {
             throw new IllegalArgumentException("defaultValue is not acceptable");
         }
+
+        this.value = defaultValue;
+        this.acceptable = acceptable;
+        this.afterChanged = afterChanged;
         this.defaultValue = defaultValue;
         this.commandArgumentAppender = commandArgumentAppender;
         this.valueParser = valueParser;
         this.toStringer = toStringer;
         this.jsonCodec = jsonCodec;
+
+        // set description
+        this.description = Text.translatable("command.mdt.toggle.description." + getName());
+
+        // call afterChanged
+        this.afterChanged.accept(defaultValue, defaultValue);
     }
 
     @Override
@@ -97,6 +108,10 @@ public final class Toggle<T> extends ToggleNode {
 
     public T getInputValue(CommandContext<FabricClientCommandSource> context, int parentId) throws CommandSyntaxException {
         return valueParser.parse(context, parentId);
+    }
+
+    public Text getDescription() {
+        return description;
     }
 
     private static final BiConsumer<?, ?> DO_NOTHING = (a, b) -> {};
