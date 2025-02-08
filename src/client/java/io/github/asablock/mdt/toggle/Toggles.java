@@ -5,7 +5,6 @@ import com.google.common.collect.HashBiMap;
 import io.github.asablock.mdt.IOUtil;
 import io.github.asablock.mdt.Mdt;
 import io.github.asablock.mdt.toggle.enums.*;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -22,11 +21,12 @@ public final class Toggles {
 
     public static final ToggleDirectory root = regn(ToggleDirectory.createRootNode());
 
-    public static final Toggle<ChatMaxLengthBehavior> chatMaxLengthBehavior = reg(ofEnum(root, "chatMaxLengthBehavior", ChatMaxLengthBehavior.RESTRICTED_AFTER_SENDING, ChatMaxLengthBehavior.class));
-    public static final Toggle<Boolean> disableBlindness = reg(ofBool(root, "disableBlindness", true));
-    public static final Toggle<Boolean> disableDarkness = reg(ofBool(root, "disableDarkness", true));
-    public static final Toggle<Boolean> disableRespawnWait = reg(ofBool(root, "disableRespawnWait", true));
-    public static final Toggle<Boolean> chatOnDeath = reg(ofBool(root, "chatOnDeath", true));
+    public static final Toggle<ChatMaxLengthBehavior> chatMaxLengthBehavior = reg(ofEnum(root, "chatMaxLengthBehavior", ChatMaxLengthBehavior.VANILLA, ChatMaxLengthBehavior.class));
+    public static final Toggle<Boolean> disableBlindness = reg(ofBool(root, "disableBlindness", false));
+    public static final Toggle<Boolean> disableDarkness = reg(ofBool(root, "disableDarkness", false));
+    public static final Toggle<Boolean> disableRespawnWait = reg(ofBool(root, "disableRespawnWait", false));
+    public static final Toggle<Boolean> chatOnDeath = reg(ofBool(root, "chatOnDeath", false));
+    public static final Toggle<Boolean> disableNightVision = reg(ofBool(root, "disableNightVision", false));
 
     public static final ToggleDirectory sysio = regn(ofDir(root, "sysio"));
 

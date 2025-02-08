@@ -12,9 +12,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(BackgroundRenderer.class)
 public class MixinBackgroundRenderer {
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry;)Z", ordinal = 1))
+    @Redirect(method = "getFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry;)Z", ordinal = 1))
     private static boolean disableDarkness(LivingEntity instance, RegistryEntry<StatusEffect> effect) {
         return !Toggles.disableDarkness.get() && instance.hasStatusEffect(effect);
+    }
+
+    @Redirect(method = "getFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry;)Z", ordinal = 0))
+    private static boolean disableNightVision(LivingEntity instance, RegistryEntry<StatusEffect> effect) {
+        return !Toggles.disableNightVision.get() && instance.hasStatusEffect(effect);
     }
 
     @Redirect(method = "method_42589", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer$StatusEffectFogModifier;shouldApply(Lnet/minecraft/entity/LivingEntity;F)Z"))

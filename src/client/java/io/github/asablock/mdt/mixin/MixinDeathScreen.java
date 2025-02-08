@@ -25,7 +25,6 @@ public abstract class MixinDeathScreen extends Screen {
 
     @Shadow @Final private List<ButtonWidget> buttons;
 
-    @Shadow protected abstract void quitLevel();
 
     @Redirect(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/DeathScreen;setButtonsActive(Z)V"))
     private void disableRespawnWait(DeathScreen instance, boolean active) {
@@ -36,7 +35,7 @@ public abstract class MixinDeathScreen extends Screen {
     private void addChatButton(CallbackInfo ci) {
         if (Toggles.chatOnDeath.get()) {
             DeathScreen self = Mdt.cast(this);
-            ScreenInvoker screenInvoker = (ScreenInvoker) self;
+            final ScreenInvoker screenInvoker = (ScreenInvoker) self;
             buttons.add(screenInvoker.invokeAddDrawableChild(
                     ButtonWidget.builder(Text.translatable("mdt.deathScreen.openChat"),
                             button -> ((MinecraftClientInvoker) screenInvoker.getClient()).invokeOpenChatScreen(""))

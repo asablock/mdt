@@ -4,7 +4,7 @@ import net.minecraft.util.StringIdentifiable;
 
 public enum ChatMaxLengthBehavior implements StringIdentifiable {
     UNLIMITED("unlimited", false, false),
-    LIMITED("limited", true, false),
+    VANILLA("vanilla", true, false),
     RESTRICTED_AFTER_SENDING("restrictedAfterSending", false, true);
     private final String string;
     private final boolean shallRestrictFieldMaxLength;

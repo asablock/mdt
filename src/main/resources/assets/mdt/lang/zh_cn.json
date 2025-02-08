@@ -19,6 +19,7 @@
   "command.mdt.toggle.description.disableDarkness": "如果为 true，黑暗效果将不会影响玩家视野。如果为 false，黑暗效果保持原版行为。",
   "command.mdt.toggle.description.disableRespawnWait": "如果为 true，死亡屏幕中的按钮在玩家死后会立刻启用。如果为 false，按钮将在玩家死后的第一秒内禁用 (原版行为)。",
   "command.mdt.toggle.description.chatOnDeath": "如果为 true，在玩家死后会有一个打开聊天界面的按钮。",
+  "command.mdt.toggle.description.disableNightVision": "如果为 true，夜视效果将不会影响渲染。如果为 false，夜视效果保持原版行为。",
   "command.mdt.toggle.description.sysio.sendSysOutToChat": "如果为 true，System.out 打印流中的消息会被发送至聊天中。",
   "command.mdt.toggle.description.sysio.sendSysErrToChat": "如果为 true，System.err 打印流中的消息会被以红色字体发送至聊天中。"
 }
