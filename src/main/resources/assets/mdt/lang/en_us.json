@@ -20,6 +20,7 @@
   "command.mdt.toggle.description.disableRespawnWait": "If true, the buttons in death screens will be enabled immediately after the player has died. If false, the buttons will be disabled in the first one second after the player has died as vanilla behavior.",
   "command.mdt.toggle.description.chatOnDeath": "If true, there will be a button to open chat when the player dies.",
   "command.mdt.toggle.description.disableNightVision": "If true, the night vision effect will not influence rendering. If false, the night vision effect works as vanilla behavior.",
+  "command.mdt.toggle.description.showBarrier": "If true, there will be a model visible in any game mode for barriers. Reloading chunks may be needed to update models.",
   "command.mdt.toggle.description.sysio.sendSysOutToChat": "If true, the messages in System.out print stream will be sent to the chat.",
   "command.mdt.toggle.description.sysio.sendSysErrToChat": "If true, the messages in System.err print stream will be sent to the chat in red font."
 }

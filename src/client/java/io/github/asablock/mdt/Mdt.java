@@ -5,9 +5,12 @@ import io.github.asablock.mdt.command.*;
 import io.github.asablock.mdt.toggle.ToggleSerializer;
 import io.github.asablock.mdt.toggle.Toggles;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +67,9 @@ public class Mdt implements ClientModInitializer {
                 LOGGER.error("Cannot save config", e);
             }
         });
+
+		// barrier: cutout
+		BlockRenderLayerMap.INSTANCE.putBlock(Blocks.BARRIER, RenderLayer.getCutout());
 	}
 
 	@SuppressWarnings("unchecked")

@@ -5,9 +5,13 @@
   "client": [
     "ClientPlayNetworkHandlerAccessor",
     "MinecraftClientInvoker",
+    "MixinAbstractBlockState",
     "MixinBackgroundRenderer",
+    "MixinBarrierBlock",
+    "MixinBlockStateModelGenerator",
     "MixinChatScreen",
     "MixinClientPlayerEntity",
+    "MixinClientWorld",
     "MixinDeathScreen",
     "MixinLightmapTextureManager",
     "MixinWorldRenderer",

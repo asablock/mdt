@@ -27,6 +27,7 @@ public final class Toggles {
     public static final Toggle<Boolean> disableRespawnWait = reg(ofBool(root, "disableRespawnWait", false));
     public static final Toggle<Boolean> chatOnDeath = reg(ofBool(root, "chatOnDeath", false));
     public static final Toggle<Boolean> disableNightVision = reg(ofBool(root, "disableNightVision", false));
+    public static final Toggle<Boolean> showBarrier = reg(ofBool(root, "showBarrier", false));
 
     public static final ToggleDirectory sysio = regn(ofDir(root, "sysio"));
 
