@@ -15,7 +15,8 @@
     "MixinDeathScreen",
     "MixinLightmapTextureManager",
     "MixinWorldRenderer",
-    "ScreenInvoker"
+    "ScreenInvoker",
+    "DefaultPosArgumentAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

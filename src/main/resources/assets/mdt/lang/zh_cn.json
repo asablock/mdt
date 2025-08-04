@@ -22,5 +22,11 @@
   "command.mdt.toggle.description.disableNightVision": "如果为 true，夜视效果将不会影响渲染。如果为 false，夜视效果保持原版行为。",
   "command.mdt.toggle.description.showBarrier": "如果为 true，屏障将会有一个在任何游戏模式可见的模型。可能需要重新加载区块以更新模型。",
   "command.mdt.toggle.description.sysio.sendSysOutToChat": "如果为 true，System.out 打印流中的消息会被发送至聊天中。",
-  "command.mdt.toggle.description.sysio.sendSysErrToChat": "如果为 true，System.err 打印流中的消息会被以红色字体发送至聊天中。"
+  "command.mdt.toggle.description.sysio.sendSysErrToChat": "如果为 true，System.err 打印流中的消息会被以红色字体发送至聊天中。",
+  "command.mdt.server.not_in_game": "未进行游戏",
+  "command.mdt.server.ip.success": "服务器地址为 %1$s",
+  "command.mdt.server.ip.null_server_info": "无服务器信息",
+  "command.mdt.server.player_not_exist": "玩家 %1$s 不存在",
+  "command.mdt.server.playerproperties.count": "发现了玩家 %2$s 的 %1$s 条属性:",
+  "command.mdt.server.playerproperties.line": "%1$s => (名称: \"%2$s\", 值: \"%3$s\", 签名: \"%4$s\")"
 }

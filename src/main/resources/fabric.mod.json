@@ -32,5 +32,6 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
+		"clientcommands": "*"
 	}
 }

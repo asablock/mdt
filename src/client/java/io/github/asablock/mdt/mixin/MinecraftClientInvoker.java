@@ -8,4 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MinecraftClientInvoker {
     @Invoker
     void invokeOpenChatScreen(String text);
+
+    @Invoker
+    void invokeDoItemUse();
 }

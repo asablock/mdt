@@ -57,6 +57,9 @@ public class Mdt implements ClientModInitializer {
 			RespawnCommand.register(dispatcher);
 			DisconnectCommand.register(dispatcher);
 			SystemCommand.register(dispatcher);
+			ServerCommand.register(dispatcher);
+			InteractCommand.register(dispatcher);
+			DebugCommand.register(dispatcher);
 		});
 
 		// Save config on client stop

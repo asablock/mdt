@@ -1,0 +1,13 @@
+package io.github.asablock.mdt;
+
+import com.mojang.serialization.Codec;
+import net.minecraft.command.argument.EnumArgumentType;
+import net.minecraft.util.StringIdentifiable;
+
+import java.util.function.Supplier;
+
+public class PEnumArgumentType<T extends Enum<T> & StringIdentifiable> extends EnumArgumentType<T> {
+    public PEnumArgumentType(Codec<T> codec, Supplier<T[]> valuesSupplier) {
+        super(codec, valuesSupplier);
+    }
+}
