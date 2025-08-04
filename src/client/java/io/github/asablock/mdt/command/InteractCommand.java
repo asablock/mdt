@@ -11,11 +11,14 @@ import io.github.asablock.mdt.mixin.MinecraftClientInvoker;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
@@ -47,7 +50,61 @@ public class InteractCommand {
     }
 
     public static int executeCrosshairTarget(CommandContext<FabricClientCommandSource> context) {
-        ((MinecraftClientInvoker) context.getSource().getClient()).invokeDoItemUse();
+        MinecraftClient client = context.getSource().getClient();
+        if (client.crosshairTarget != null) {
+            for (Hand hand : Hand.values()) {
+                ItemStack itemStack = client.player.getStackInHand(hand);
+                if (client.crosshairTarget != null) {
+                    switch (client.crosshairTarget.getType()) {
+                        case ENTITY:
+                            EntityHitResult entityHitResult = (EntityHitResult) client.crosshairTarget;
+                            Entity entity = entityHitResult.getEntity();
+                            ActionResult actionResult = client.interactionManager.interactEntityAtLocation(client.player, entity, entityHitResult, hand);
+                            if (!actionResult.isAccepted()) {
+                                actionResult = client.interactionManager.interactEntity(client.player, entity, hand);
+                            }
+
+                            if (actionResult instanceof ActionResult.Success success) {
+                                if (success.swingSource() == ActionResult.SwingSource.CLIENT) {
+                                    client.player.swingHand(hand);
+                                }
+                                context.getSource().sendFeedback(Text.literal("Used!"));
+                                return 1;
+                            }
+                            break;
+                        case BLOCK:
+                            BlockHitResult blockHitResult = (BlockHitResult) client.crosshairTarget;
+                            int i = itemStack.getCount();
+                            ActionResult actionResult2 = client.interactionManager.interactBlock(client.player, hand, blockHitResult);
+                            if (actionResult2 instanceof ActionResult.Success success2) {
+                                if (success2.swingSource() == ActionResult.SwingSource.CLIENT) {
+                                    client.player.swingHand(hand);
+                                    if (!itemStack.isEmpty() && (itemStack.getCount() != i || client.interactionManager.hasCreativeInventory())) {
+                                        client.gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
+                                    }
+                                }
+                                context.getSource().sendFeedback(Text.literal("Used!"));
+                                return 1;
+                            }
+
+                            if (actionResult2 instanceof ActionResult.Fail) {
+                                context.getSource().sendFeedback(Text.literal("Used!"));
+                                return 1;
+                            }
+                    }
+                }
+
+                if (!itemStack.isEmpty() && client.interactionManager.interactItem(client.player, hand) instanceof ActionResult.Success success3) {
+                    if (success3.swingSource() == ActionResult.SwingSource.CLIENT) {
+                        client.player.swingHand(hand);
+                    }
+
+                    client.gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
+                    context.getSource().sendFeedback(Text.literal("Used!"));
+                    return 1;
+                }
+            }
+        }
         context.getSource().sendFeedback(Text.literal("Used!"));
         return 1;
     }
