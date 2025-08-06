@@ -4,7 +4,8 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import oshi.util.tuples.Triplet;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,18 +33,18 @@ public final class CommandUtil {
             return this;
         }
 
-        public T executes(BiFunction<CommandContext<S>, Object[], Integer> command) {
+        public T executes(CommandWithArgs<S> command) {
             executes0(first, args, command);
             return first;
         }
 
-        private static class Arg<A> extends Triplet<String, A, ArgumentType<A>> {
+        private static class Arg<A> extends ImmutableTriple<String, A, ArgumentType<A>> {
             public Arg(String s, A a, ArgumentType<A> aArgumentType) {
                 super(s, a, aArgumentType);
             }
         }
 
-        private static <S> void executes0(ArgumentBuilder<S, ?> first, final List<Arg<?>> args, final BiFunction<CommandContext<S>, Object[], Integer> command) {
+        private static <S> void executes0(ArgumentBuilder<S, ?> first, final List<Arg<?>> args, final CommandWithArgs<S> command) {
             if (args.isEmpty()) {
                 throw new IllegalArgumentException("args is empty");
             }
@@ -53,29 +54,35 @@ public final class CommandUtil {
             var iterator = args.iterator();
             for (int i = 0; iterator.hasNext(); i++) {
                 var a = iterator.next();
-                defaultVals[i] = a.getB();
+                defaultVals[i] = a.getMiddle();
             }
 
             RequiredArgumentBuilder<S, ?> builder = null;
             int i = size;
             for (Arg<?> arg : args.reversed()) {
                 final int index = i;
-                RequiredArgumentBuilder<S, ?> b = RequiredArgumentBuilder.argument(arg.getA(), arg.getC());
+                RequiredArgumentBuilder<S, ?> b = RequiredArgumentBuilder.argument(arg.getLeft(), arg.getRight());
                 if (builder != null) b.then(builder);
                 b.executes(context -> {
                     Object[] v = new Object[size];
                     for (int j = 0; j < index; j++) {
                         var a = args.get(j);
-                        v[j] = context.getArgument(a.getA(), Object.class);
+                        v[j] = context.getArgument(a.getLeft(), Object.class);
                     }
                     System.arraycopy(defaultVals, index, v, index, size - index);
-                    return command.apply(context, v);
+                    return command.run(context, v);
                 });
                 builder = b;
                 i--;
             }
             if (builder != null) first.then(builder);
-            first.executes(context -> command.apply(context, defaultVals));
+            first.executes(context -> command.run(context, defaultVals));
+        }
+
+        public interface CommandWithArgs<S> {
+            int SINGLE_SUCCESS = 1;
+
+            int run(CommandContext<S> context, Object[] args) throws CommandSyntaxException;
         }
     }
 }

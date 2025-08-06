@@ -1,4 +1,4 @@
-package io.github.asablock.mdt;
+package io.github.asablock.mdt.command.argument;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;

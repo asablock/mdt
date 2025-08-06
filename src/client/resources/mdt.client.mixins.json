@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "ClientPlayNetworkHandlerAccessor",
+    "DefaultPosArgumentAccessor",
     "MinecraftClientInvoker",
     "MixinAbstractBlockState",
     "MixinBackgroundRenderer",
@@ -11,12 +12,13 @@
     "MixinBlockStateModelGenerator",
     "MixinChatScreen",
     "MixinClientPlayerEntity",
+    "MixinClientPlayNetworkHandler",
     "MixinClientWorld",
     "MixinDeathScreen",
     "MixinLightmapTextureManager",
     "MixinWorldRenderer",
     "ScreenInvoker",
-    "DefaultPosArgumentAccessor"
+    "WorldInvoker"
   ],
   "injectors": {
     "defaultRequire": 1

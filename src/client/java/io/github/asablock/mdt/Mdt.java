@@ -2,6 +2,7 @@ package io.github.asablock.mdt;
 
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.asablock.mdt.command.*;
+import io.github.asablock.mdt.command.argument.ClientEntitySelectorOptions;
 import io.github.asablock.mdt.toggle.ToggleSerializer;
 import io.github.asablock.mdt.toggle.Toggles;
 import net.fabricmc.api.ClientModInitializer;
@@ -10,8 +11,11 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
+import net.minecraft.world.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +54,9 @@ public class Mdt implements ClientModInitializer {
 		// Redirect System.in
 		System.setIn(SystemCommand.SYSIN);
 
+		// Register ClientEntitySelectorOptions
+		ClientEntitySelectorOptions.register();
+
 		// Register commands
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			SendChatCommand.register(dispatcher);
@@ -60,6 +67,7 @@ public class Mdt implements ClientModInitializer {
 			ServerCommand.register(dispatcher);
 			InteractCommand.register(dispatcher);
 			DebugCommand.register(dispatcher);
+			ScoreboardCommand.register(dispatcher);
 		});
 
 		// Save config on client stop
@@ -78,5 +86,9 @@ public class Mdt implements ClientModInitializer {
 	@SuppressWarnings("unchecked")
 	public static <T> T cast(Object o) {
 		return (T) o;
+	}
+
+	public static GameMode getGameMode(MinecraftClient client, AbstractClientPlayerEntity player) {
+		return client.getNetworkHandler().getPlayerListEntry(player.getUuid()).getGameMode();
 	}
 }

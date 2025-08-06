@@ -1,13 +1,15 @@
 package io.github.asablock.mdt.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
-import io.github.asablock.mdt.ClientBlockPosArgumentType;
+import io.github.asablock.mdt.command.argument.ClientBlockPosArgumentType;
 import io.github.asablock.mdt.CommandUtil;
-import io.github.asablock.mdt.PEnumArgumentType;
-import io.github.asablock.mdt.mixin.MinecraftClientInvoker;
+import io.github.asablock.mdt.command.argument.ClientEntityArgumentType;
+import io.github.asablock.mdt.command.argument.PEnumArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -25,10 +27,13 @@ import net.minecraft.util.math.Direction;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 public class InteractCommand {
+    public static final ArgumentType<HandSI> HAND_ARGUMENT_TYPE = new PEnumArgumentType<>(HandSI.class);
+
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(literal("minteract")
-                //.then(literal("block").then(argument("pos", ClientBlockPosArgumentType.blockPos()).then(argument("side", new PEnumArgumentType<>(Direction.CODEC, Direction::values)).then(argument("hand", new PEnumArgumentType<>(HandSI.CODEC, HandSI::values)).then(argument("insideblock", BoolArgumentType.bool()).executes(InteractCommand::executeBlock))))))
-                .then(literal("block").then(CommandUtil.chainedCommandBuilder(argument("pos", ClientBlockPosArgumentType.blockPos())).append("side", Direction.UP, new PEnumArgumentType<>(Direction.CODEC, Direction::values)).append("hand", HandSI.MAIN_HAND, new PEnumArgumentType<>(HandSI.CODEC, HandSI::values)).append("insideblock", false, BoolArgumentType.bool()).append("againstworldborder", false, BoolArgumentType.bool()).executes(InteractCommand::executeBlock)))
+                .then(literal("block").then(CommandUtil.chainedCommandBuilder(argument("pos", ClientBlockPosArgumentType.blockPos())).append("side", Direction.UP, new PEnumArgumentType<>(Direction.class)).append("hand", HandSI.MAIN_HAND, HAND_ARGUMENT_TYPE).append("insideblock", false, BoolArgumentType.bool()).append("againstworldborder", false, BoolArgumentType.bool()).executes(InteractCommand::executeBlock)))
+                .then(literal("entity").then(CommandUtil.chainedCommandBuilder(argument("target", ClientEntityArgumentType.entity())).append("hand", HandSI.MAIN_HAND, HAND_ARGUMENT_TYPE).executes(InteractCommand::executeEntity)))
+                .then(CommandUtil.chainedCommandBuilder(literal("item")).append("hand", HandSI.MAIN_HAND, HAND_ARGUMENT_TYPE).executes(InteractCommand::executeItem))
                 .then(literal("crosshairtarget").executes(InteractCommand::executeCrosshairTarget)));
     }
 
@@ -45,6 +50,29 @@ public class InteractCommand {
         ClientPlayerInteractionManager cpim = client.interactionManager;
         if (cpim == null) return 0;
         ActionResult actionResult = cpim.interactBlock(client.player, hand, blockHitResult);
+        context.getSource().sendFeedback(Text.literal(String.valueOf(actionResult)));
+        return actionResult != null && actionResult.isAccepted() ? 1 : 0;
+    }
+
+    public static int executeEntity(CommandContext<FabricClientCommandSource> context, Object[] args) throws CommandSyntaxException {
+        Entity target = ClientEntityArgumentType.getEntity(context, "target");
+        Hand hand = ((HandSI) args[0]).hand;
+
+        MinecraftClient client = context.getSource().getClient();
+        ClientPlayerInteractionManager cpim = client.interactionManager;
+        if (cpim == null) return 0;
+        ActionResult actionResult = cpim.interactEntity(client.player, target, hand);
+        context.getSource().sendFeedback(Text.literal(String.valueOf(actionResult)));
+        return actionResult != null && actionResult.isAccepted() ? 1 : 0;
+    }
+
+    public static int executeItem(CommandContext<FabricClientCommandSource> context, Object[] args) {
+        Hand hand = ((HandSI) args[0]).hand;
+
+        MinecraftClient client = context.getSource().getClient();
+        ClientPlayerInteractionManager cpim = client.interactionManager;
+        if (cpim == null) return 0;
+        ActionResult actionResult = cpim.interactItem(client.player, hand);
         context.getSource().sendFeedback(Text.literal(String.valueOf(actionResult)));
         return actionResult != null && actionResult.isAccepted() ? 1 : 0;
     }
