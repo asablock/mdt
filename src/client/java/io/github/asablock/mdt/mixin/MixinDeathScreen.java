@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.asablock.mdt.Mdt;
@@ -13,9 +14,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -63,8 +62,8 @@ public abstract class MixinDeathScreen extends Screen {
         }
     }
 
-    @ModifyConstant(method = "onTitleScreenButtonClicked", constant = @Constant(stringValue = "deathScreen.respawn"))
-    private String modifyButtonName(String constant) {
-        return Toggles.chatOnDeath.get() ? "gui.cancel" : constant;
+    @ModifyExpressionValue(method = "onTitleScreenButtonClicked", at = @At(value = "CONSTANT", args = "stringValue=deathScreen.respawn"))
+    private String modifyButtonName(String original) {
+        return Toggles.chatOnDeath.get() ? "gui.cancel" : original;
     }
 }
