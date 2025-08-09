@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.asablock.mdt.IOUtil;
+import io.github.asablock.mdt.util.IOUtil;
 import io.github.asablock.mdt.Mdt;
 import io.github.asablock.mdt.toggle.Toggle;
 import io.github.asablock.mdt.toggle.ToggleSerializer;
@@ -26,7 +26,8 @@ public class ToggleCommand {
         for (Toggle<?> toggle : Toggles.TOGGLES.values()) {
             LiteralArgumentBuilder<FabricClientCommandSource> l =
                     literal(toggle.getName()).executes(new ExecuteQuery(toggle))
-                            .then(literal("reset").executes(new ExecuteReset<>(toggle)));
+                            .then(literal("reset").executes(new ExecuteReset<>(toggle)))
+                            .then(literal("description").executes(new ExecuteDescription(toggle)));
             toggle.appendCommandArgument(l, new ExecutesSet<>(toggle));
             lab.then(l);
         }
