@@ -1,5 +1,7 @@
 package io.github.asablock.mdt.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import io.github.asablock.mdt.toggle.Toggles;
 import net.minecraft.block.BarrierBlock;
 import net.minecraft.block.Block;
@@ -17,12 +19,12 @@ public abstract class MixinBarrierBlock extends Block {
         super(settings);
     }
 
-    @Inject(method = "getRenderType", at = @At("HEAD"), cancellable = true)
-    private void getRenderType(BlockState state, CallbackInfoReturnable<BlockRenderType> cir) {
-        cir.setReturnValue(Toggles.showBarrier.get() ? BlockRenderType.MODEL : BlockRenderType.INVISIBLE);
+    @WrapMethod(method = "getRenderType")
+    private BlockRenderType getRenderType(BlockState state, Operation<BlockRenderType> original) {
+        return Toggles.showBarrier.get() ? BlockRenderType.MODEL : original.call(state);
     }
 
-    @Override
+    @Override // @WrapMethod cannot be used here
     protected boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
         // from TranslucentBlock.java
         return stateFrom.isOf(this) || super.isSideInvisible(state, stateFrom, direction);

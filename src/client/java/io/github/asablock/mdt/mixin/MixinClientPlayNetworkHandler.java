@@ -3,6 +3,7 @@ package io.github.asablock.mdt.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.asablock.mdt.ClientLoadedPlayerManager;
+import io.github.asablock.mdt.event.ClientPlayerEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.*;
 import net.minecraft.client.world.ClientWorld;
@@ -64,6 +65,7 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
         ClientPlayerEntity player = this.client.player;
         mdt_loadedPlayers.add(player);
         mdt_playerMap.put(player.getUuid(), player);
+        ClientPlayerEvents.PLAYER_RESPAWNED.invoker().onPlayerRespawned(player);
     }
 
     @Inject(method = "createEntity", at = @At("RETURN"))
@@ -71,15 +73,17 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
         if (cir.getReturnValue() instanceof OtherClientPlayerEntity ocpe) {
             mdt_loadedPlayers.add(ocpe);
             mdt_playerMap.put(ocpe.getUuid(), ocpe);
+            ClientPlayerEvents.PLAYER_LOADED.invoker().onPlayerLoaded(ocpe);
         }
     }
 
     @WrapOperation(method = "method_64896", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;getEntityById(I)Lnet/minecraft/entity/Entity;"))
     private Entity removePlayer(ClientWorld instance, int id, Operation<Entity> original) {
         Entity entity = original.call(instance, id);
-        if (entity instanceof AbstractClientPlayerEntity) {
-            mdt_loadedPlayers.remove(entity);
-            mdt_playerMap.remove(entity.getUuid());
+        if (entity instanceof AbstractClientPlayerEntity player) {
+            mdt_loadedPlayers.remove(player);
+            mdt_playerMap.remove(player.getUuid());
+            ClientPlayerEvents.PLAYER_UNLOADING.invoker().onPlayerUnloading(player);
         }
         return entity;
     }
@@ -88,5 +92,6 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
     private void addJoinPlayer(GameJoinS2CPacket packet, CallbackInfo ci) {
         mdt_loadedPlayers.add(this.client.player);
         mdt_playerMap.put(this.client.player.getUuid(), this.client.player);
+        ClientPlayerEvents.PLAYER_JOINED.invoker().onPlayerJoined(this.client.player);
     }
 }

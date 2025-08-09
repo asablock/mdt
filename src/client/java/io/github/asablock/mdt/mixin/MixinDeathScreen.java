@@ -1,5 +1,7 @@
 package io.github.asablock.mdt.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.asablock.mdt.Mdt;
 import io.github.asablock.mdt.toggle.Toggles;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -10,7 +12,10 @@ import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -26,9 +31,9 @@ public abstract class MixinDeathScreen extends Screen {
     @Shadow @Final private List<ButtonWidget> buttons;
 
 
-    @Redirect(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/DeathScreen;setButtonsActive(Z)V"))
-    private void disableRespawnWait(DeathScreen instance, boolean active) {
-        if (!Toggles.disableRespawnWait.get()) setButtonsActive(active);
+    @WrapOperation(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/DeathScreen;setButtonsActive(Z)V"))
+    private void disableRespawnWait(DeathScreen instance, boolean active, Operation<Void> original) {
+        if (!Toggles.disableRespawnWait.get()) original.call(instance, active);
     }
 
     @Inject(method = "init", at = @At("TAIL"))
@@ -45,9 +50,9 @@ public abstract class MixinDeathScreen extends Screen {
         }
     }
 
-    @Redirect(method = "onTitleScreenButtonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ConfirmScreen;disableButtons(I)V"))
-    private void disableConfirmScreenWait(ConfirmScreen instance, int ticks) {
-        if (!Toggles.disableRespawnWait.get()) instance.disableButtons(ticks);
+    @WrapOperation(method = "onTitleScreenButtonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ConfirmScreen;disableButtons(I)V"))
+    private void disableConfirmScreenWait(ConfirmScreen instance, int ticks, Operation<Void> original) {
+        if (!Toggles.disableRespawnWait.get()) original.call(instance, ticks);
     }
 
     @Inject(method = "method_47939", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;requestRespawn()V"), cancellable = true)

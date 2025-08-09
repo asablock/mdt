@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPlayerEntity.class)
-public class MixinClientPlayerEntity {
+public abstract class MixinClientPlayerEntity {
     @Inject(method = "isBlind", at = @At("RETURN"), cancellable = true)
     private void isBlind(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(!Toggles.disableBlindness.get() && cir.getReturnValueZ());
