@@ -18,6 +18,7 @@ public class PlayerAlert {
     private static final Set<AbstractClientPlayerEntity> TRACKED_PLAYERS = new HashSet<>();
 
     public static void tick(MinecraftClient client) {
+        if (!Toggles.playerAlert_enabled.get()) return;
         ClientLoadedPlayerManager manager = (ClientLoadedPlayerManager) client.world;
         if (manager == null) return;
         for (AbstractClientPlayerEntity player : manager.mdt_getPlayerList()) {
@@ -37,11 +38,13 @@ public class PlayerAlert {
     }
 
     public static void afterWorldChange(MinecraftClient client, ClientWorld world) {
+        if (!Toggles.playerAlert_enabled.get()) return;
         TRACKED_PLAYERS.clear();
         Util.sendMessage(Text.translatable("mdt.playerAlert.worldChanged").formatted(Formatting.YELLOW));
     }
 
     public static void playerUnloading(AbstractClientPlayerEntity player) {
+        if (!Toggles.playerAlert_enabled.get()) return;
         if (TRACKED_PLAYERS.remove(player)) {
             alertLeave(player);
         }
