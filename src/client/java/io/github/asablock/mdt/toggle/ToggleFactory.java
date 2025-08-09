@@ -3,6 +3,7 @@ package io.github.asablock.mdt.toggle;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.text.Text;
@@ -86,5 +87,35 @@ public class ToggleFactory {
                         throw NOT_QUOTED_STRING_EXCEPTION.create();
                     }
                 });
+    }
+
+    /**
+     * @param min inclusive
+     * @param max inclusive
+     */
+    public static Toggle<Integer> ofInt(ToggleDirectory parent, String name, int defaultValue, int min, int max) {
+        return new Toggle<>(parent, name, defaultValue, i -> i >= min && i <= max, Toggle.doNothing(),
+                of(JsonPrimitive::new, JsonElement::getAsInt), Object::toString,
+                (p, executes) -> p.then(argument("value", IntegerArgumentType.integer(min, max)).executes(executes.direct())),
+                ((context, parentId) -> IntegerArgumentType.getInteger(context, "value")));
+    }
+
+    /**
+     * @param min inclusive
+     * @param max inclusive
+     */
+    public static Toggle<Integer> ofInt(ToggleDirectory parent, String name, int defaultValue, int min, int max, BiConsumer<Integer, Integer> afterChanged) {
+        return new Toggle<>(parent, name, defaultValue, i -> i >= min && i <= max, afterChanged,
+                of(JsonPrimitive::new, JsonElement::getAsInt), Object::toString,
+                (p, executes) -> p.then(argument("value", IntegerArgumentType.integer(min, max)).executes(executes.direct())),
+                ((context, parentId) -> IntegerArgumentType.getInteger(context, "value")));
+    }
+
+    public static Toggle<Integer> ofInt(ToggleDirectory parent, String name, int defaultValue) {
+        return ofInt(parent, name, defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    public static Toggle<Integer> ofInt(ToggleDirectory parent, String name, int defaultValue, BiConsumer<Integer, Integer> afterChanged) {
+        return ofInt(parent, name, defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE, afterChanged);
     }
 }

@@ -2,7 +2,8 @@ package io.github.asablock.mdt.toggle;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import io.github.asablock.mdt.IOUtil;
+import io.github.asablock.mdt.PlayerAlert;
+import io.github.asablock.mdt.util.IOUtil;
 import io.github.asablock.mdt.Mdt;
 import io.github.asablock.mdt.toggle.enums.*;
 import net.minecraft.text.Text;
@@ -31,8 +32,15 @@ public final class Toggles {
 
     public static final ToggleDirectory sysio = regn(ofDir(root, "sysio"));
 
-    public static final Toggle<Boolean> sendSysOutToChat = reg(ofBool(sysio, "sendSysOutToChat", false, (o, n) -> System.setOut(n ? MIXED_SYSOUT : Mdt.LOGGER_OUT_PRINT_STREAM)));
-    public static final Toggle<Boolean> sendSysErrToChat = reg(ofBool(sysio, "sendSysErrToChat", false, (o, n) -> System.setOut(n ? MIXED_SYSERR : Mdt.LOGGER_ERROR_PRINT_STREAM)));
+    public static final Toggle<Boolean> sysio_sendSysOutToChat = reg(ofBool(sysio, "sendSysOutToChat", false, (o, n) -> System.setOut(n ? MIXED_SYSOUT : Mdt.LOGGER_OUT_PRINT_STREAM)));
+    public static final Toggle<Boolean> sysio_sendSysErrToChat = reg(ofBool(sysio, "sendSysErrToChat", false, (o, n) -> System.setOut(n ? MIXED_SYSERR : Mdt.LOGGER_ERROR_PRINT_STREAM)));
+
+    public static final ToggleDirectory playerAlert = regn(ofDir(root, "playerAlert"));
+
+    public static final Toggle<Boolean> playerAlert_enabled = reg(ofBool(playerAlert, "enabled", false));
+    public static final Toggle<Integer> playerAlert_radius = reg(ofInt(playerAlert, "radius", 128, 0, Integer.MAX_VALUE, (old, r) -> PlayerAlert.squaredAlertRadius = r * r));
+    public static final Toggle<Boolean> playerAlert_alertSelf = reg(ofBool(playerAlert, "alertSelf", false));
+    public static final Toggle<Boolean> playerAlert_sound = reg(ofBool(playerAlert, "sound", false));
 
     public static <E> Toggle<E> reg(Toggle<E> toggle) {
         regn(toggle);
@@ -40,7 +48,7 @@ public final class Toggles {
         return toggle;
     }
 
-    public static <E extends ToggleNode> E regn(E node) {
+    public static <N extends ToggleNode> N regn(N node) {
         TOGGLE_NODES.put(node.getName(), node);
         return node;
     }

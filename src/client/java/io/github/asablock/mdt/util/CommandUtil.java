@@ -1,4 +1,4 @@
-package io.github.asablock.mdt;
+package io.github.asablock.mdt.util;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -9,7 +9,6 @@ import org.apache.commons.lang3.tuple.ImmutableTriple;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiFunction;
 
 public final class CommandUtil {
     private CommandUtil() {

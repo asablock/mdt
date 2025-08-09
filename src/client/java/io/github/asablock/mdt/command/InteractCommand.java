@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import io.github.asablock.mdt.command.argument.ClientBlockPosArgumentType;
-import io.github.asablock.mdt.CommandUtil;
+import io.github.asablock.mdt.util.CommandUtil;
 import io.github.asablock.mdt.command.argument.ClientEntityArgumentType;
 import io.github.asablock.mdt.command.argument.PEnumArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;

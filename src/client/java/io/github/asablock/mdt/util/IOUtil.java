@@ -1,4 +1,4 @@
-package io.github.asablock.mdt;
+package io.github.asablock.mdt.util;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;

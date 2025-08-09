@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import io.github.asablock.mdt.toggle.Toggles;
@@ -19,9 +20,9 @@ public abstract class MixinBarrierBlock extends Block {
         super(settings);
     }
 
-    @WrapMethod(method = "getRenderType")
-    private BlockRenderType getRenderType(BlockState state, Operation<BlockRenderType> original) {
-        return Toggles.showBarrier.get() ? BlockRenderType.MODEL : original.call(state);
+    @ModifyReturnValue(method = "getRenderType", at = @At("RETURN"))
+    private BlockRenderType getRenderType(BlockRenderType original) {
+        return Toggles.showBarrier.get() ? BlockRenderType.MODEL : original;
     }
 
     @Override // @WrapMethod cannot be used here

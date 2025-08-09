@@ -23,10 +23,17 @@
   "command.mdt.toggle.description.showBarrier": "如果为 true，屏障将会有一个在任何游戏模式可见的模型。可能需要重新加载区块以更新模型。",
   "command.mdt.toggle.description.sysio.sendSysOutToChat": "如果为 true，System.out 打印流中的消息会被发送至聊天中。",
   "command.mdt.toggle.description.sysio.sendSysErrToChat": "如果为 true，System.err 打印流中的消息会被以红色字体发送至聊天中。",
+  "command.mdt.toggle.description.playerAlert.enabled": "如果为 true，当一名玩家进入指定范围内后会出现一条警报消息。",
+  "command.mdt.toggle.description.playerAlert.radius": "警报区域的半径。必须 ≥0。",
+  "command.mdt.toggle.description.playerAlert.alertSelf": "如果为 true，你自己也会触发玩家警报。.",
+  "command.mdt.toggle.description.playerAlert.sound": "如果为 true，玩家警报将会有一个提示音。",
   "command.mdt.server.not_in_game": "未进行游戏",
   "command.mdt.server.ip.success": "服务器地址为 %1$s",
   "command.mdt.server.ip.null_server_info": "无服务器信息",
   "command.mdt.server.player_not_exist": "玩家 %1$s 不存在",
   "command.mdt.server.playerproperties.count": "发现了玩家 %2$s 的 %1$s 条属性:",
-  "command.mdt.server.playerproperties.line": "%1$s => (名称: \"%2$s\", 值: \"%3$s\", 签名: \"%4$s\")"
+  "command.mdt.server.playerproperties.line": "%1$s => (名称: \"%2$s\", 值: \"%3$s\", 签名: \"%4$s\")",
+  "mdt.playerAlert.alert": "警报: 玩家 %1$s 进入了警报半径! 距离: %2$s 格; 位置: %3$s %4$s %5$s",
+  "mdt.playerAlert.alertLeave": "警报: 玩家 %1$s 离开了警报半径。距离: %2$s 格; 位置: %3$s %4$s %5$s",
+  "mdt.playerAlert.worldChanged": "警报: 世界已改变。"
 }

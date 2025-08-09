@@ -14,4 +14,8 @@ public interface ClientLoadedPlayerManager {
     AbstractClientPlayerEntity mdt_getPlayer(UUID uuid);
 
     List<AbstractClientPlayerEntity> mdt_getPlayerList();
+
+    boolean mdt_addPlayer(AbstractClientPlayerEntity player);
+
+    boolean mdt_removePlayer(AbstractClientPlayerEntity player);
 }

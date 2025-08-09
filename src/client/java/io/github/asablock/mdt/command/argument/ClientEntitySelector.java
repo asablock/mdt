@@ -121,7 +121,7 @@ public class ClientEntitySelector {
         if (!this.includesNonPlayers) {
             return this.getPlayers(source);
         } else if (this.playerName != null) {
-            AbstractClientPlayerEntity clientPlayerEntity = ((ClientLoadedPlayerManager) source.getClient().getNetworkHandler()).mdt_getPlayer(this.playerName);
+            AbstractClientPlayerEntity clientPlayerEntity = ((ClientLoadedPlayerManager) source.getWorld()).mdt_getPlayer(this.playerName);
             return clientPlayerEntity == null ? List.of() : List.of(clientPlayerEntity);
         } else if (this.uuid != null) {
             for (Entity entity : source.getWorld().getEntities()) {
@@ -180,7 +180,7 @@ public class ClientEntitySelector {
     }
 
     public List<AbstractClientPlayerEntity> getPlayers(FabricClientCommandSource source) {
-        ClientLoadedPlayerManager manager = (ClientLoadedPlayerManager) source.getClient().getNetworkHandler();
+        ClientLoadedPlayerManager manager = (ClientLoadedPlayerManager) source.getWorld();
         if (this.playerName != null) {
             AbstractClientPlayerEntity clientPlayerEntity = manager.mdt_getPlayer(this.playerName);
             return clientPlayerEntity == null ? List.of() : List.of(clientPlayerEntity);

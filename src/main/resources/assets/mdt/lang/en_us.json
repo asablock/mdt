@@ -23,10 +23,17 @@
   "command.mdt.toggle.description.showBarrier": "If true, there will be a model visible in any game mode for barriers. Reloading chunks may be needed to update models.",
   "command.mdt.toggle.description.sysio.sendSysOutToChat": "If true, the messages in System.out print stream will be sent to the chat.",
   "command.mdt.toggle.description.sysio.sendSysErrToChat": "If true, the messages in System.err print stream will be sent to the chat in red font.",
+  "command.mdt.toggle.description.playerAlert.enabled": "If true, there will be a notice message when a player is in the specified area.",
+  "command.mdt.toggle.description.playerAlert.radius": "The radius of the alert area. Must be ≥0.",
+  "command.mdt.toggle.description.playerAlert.alertSelf": "If true, you will also trigger the player alert.",
+  "command.mdt.toggle.description.playerAlert.sound": "If true, there will be a notice sound for the player alert.",
   "command.mdt.server.not_in_game": "Not in game",
   "command.mdt.server.ip.success": "The server address is %1$s",
   "command.mdt.server.ip.null_server_info": "No server info",
   "command.mdt.server.player_not_exist": "Player %1$s doesn't exist",
   "command.mdt.server.playerproperties.count": "Found %1$s property(ies) of player %2$s:",
-  "command.mdt.server.playerproperties.line": "%1$s => (name: \"%2$s\", value: \"%3$s\", signature: \"%4$s\")"
+  "command.mdt.server.playerproperties.line": "%1$s => (name: \"%2$s\", value: \"%3$s\", signature: \"%4$s\")",
+  "mdt.playerAlert.alert": "Alert: Player %1$s has entered the alert radius! Distance: %2$s block(s); position: %3$s %4$s %5$s",
+  "mdt.playerAlert.alertLeave": "Alert: Player %1$s has left the alert radius. Distance: %2$s block(s); position: %3$s %4$s %5$s",
+  "mdt.playerAlert.worldChanged": "Alert: The world has changed."
 }

@@ -3,12 +3,16 @@ package io.github.asablock.mdt;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.asablock.mdt.command.*;
 import io.github.asablock.mdt.command.argument.ClientEntitySelectorOptions;
+import io.github.asablock.mdt.event.ClientPlayerEvents;
 import io.github.asablock.mdt.toggle.ToggleSerializer;
 import io.github.asablock.mdt.toggle.Toggles;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -68,6 +72,7 @@ public class Mdt implements ClientModInitializer {
 			InteractCommand.register(dispatcher);
 			DebugCommand.register(dispatcher);
 			ScoreboardCommand.register(dispatcher);
+			FormattedChatCommand.register(dispatcher);
 		});
 
 		// Save config on client stop
@@ -81,6 +86,15 @@ public class Mdt implements ClientModInitializer {
 
 		// barrier: cutout
 		BlockRenderLayerMap.INSTANCE.putBlock(Blocks.BARRIER, RenderLayer.getCutout());
+
+		ClientTickEvents.END_CLIENT_TICK.register(PlayerAlert::tick);
+
+		ClientEntityEvents.ENTITY_LOAD.register(ClientLoadedPlayerManagerImpl::load);
+		ClientEntityEvents.ENTITY_UNLOAD.register(ClientLoadedPlayerManagerImpl::unload);
+
+		ClientPlayerEvents.PLAYER_UNLOADING.register(PlayerAlert::playerUnloading);
+
+		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register(PlayerAlert::afterWorldChange);
 	}
 
 	@SuppressWarnings("unchecked")
