@@ -37,6 +37,10 @@ public class PlayerAlert {
         }
     }
 
+    public static void clear() {
+        TRACKED_PLAYERS.clear();
+    }
+
     public static void afterWorldChange(MinecraftClient client, ClientWorld world) {
         if (!Toggles.playerAlert_enabled.get()) return;
         TRACKED_PLAYERS.clear();

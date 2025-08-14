@@ -3,7 +3,8 @@
 	"id": "mdt",
 	"version": "${version}",
 	"name": "Minecraft Client Debug Toolkit",
-	"description": "The mod includes several commands to help you access Minecraft. Do NOT use ANY command if you are not sure about the consequence.",
+	"description": "The mod includes several commands to help you access Minecraft. ",
+	"icon": "assets/mdt/textures/icon.png",
 	"authors": [
 		"asablock"
 	],

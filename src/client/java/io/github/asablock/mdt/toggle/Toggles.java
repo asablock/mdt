@@ -37,7 +37,11 @@ public final class Toggles {
 
     public static final ToggleDirectory playerAlert = regn(ofDir(root, "playerAlert"));
 
-    public static final Toggle<Boolean> playerAlert_enabled = reg(ofBool(playerAlert, "enabled", false));
+    public static final Toggle<Boolean> playerAlert_enabled = reg(ofBool(playerAlert, "enabled", false, (o, n) -> {
+        if (!o && n) {
+            PlayerAlert.clear();
+        }
+    }));
     public static final Toggle<Integer> playerAlert_radius = reg(ofInt(playerAlert, "radius", 128, 0, Integer.MAX_VALUE, (old, r) -> PlayerAlert.squaredAlertRadius = r * r));
     public static final Toggle<Boolean> playerAlert_alertSelf = reg(ofBool(playerAlert, "alertSelf", false));
     public static final Toggle<Boolean> playerAlert_sound = reg(ofBool(playerAlert, "sound", false));
