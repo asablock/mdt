@@ -2,15 +2,14 @@
 	"schemaVersion": 1,
 	"id": "mdt",
 	"version": "${version}",
-	"name": "Minecraft Client Debug Toolkit",
-	"description": "The mod includes several commands to help you access Minecraft. ",
+	"name": "mdt",
+	"description": "This is a pure-client mod which adds several features that may be useful.",
 	"icon": "assets/mdt/textures/icon.png",
 	"authors": [
 		"asablock"
 	],
 	"contact": {
-		"homepage": "temporarily missing",
-		"sources": "temporarily missing"
+		"sources": "https://github.com/asablock/mdt"
 	},
 	"license": "GPL-3.0",
 	"environment": "client",
