@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -30,7 +31,7 @@ public class SystemCommand {
 
     private static int executeGc(CommandContext<FabricClientCommandSource> context) {
         System.gc();
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int executeExit(CommandContext<FabricClientCommandSource> context) {
@@ -41,19 +42,19 @@ public class SystemCommand {
 
     private static int executeCurrentTimeMillis(CommandContext<FabricClientCommandSource> context) {
         long time = System.currentTimeMillis();
-        context.getSource().sendFeedback(Text.translatable("command.mdt.system.currentTimeMillis"));
-        return (int) time;
+        context.getSource().sendFeedback(Text.translatable("command.mdt.system.currentTimeMillis", time));
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int executesIn(CommandContext<FabricClientCommandSource> context) {
         String input = StringArgumentType.getString(context, "input");
         SYSIN_CHAT_READER.append(input + '\n');
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int executesOutPrintln(CommandContext<FabricClientCommandSource> context) {
         String output = StringArgumentType.getString(context, "output");
         System.out.println(output);
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 }

@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -56,7 +57,7 @@ public class InteractCommand {
         if (cpim == null) return 0;
         ActionResult actionResult = cpim.interactBlock(client.player, hand, blockHitResult);
         sendFeedback(context, actionResult);
-        return actionResult != null && actionResult.isAccepted() ? 1 : 0;
+        return CommandUtil.success(actionResult != null && actionResult.isAccepted());
     }
 
     public static int executeEntity(CommandContext<FabricClientCommandSource> context, Object[] args) throws CommandSyntaxException {
@@ -68,7 +69,7 @@ public class InteractCommand {
         if (cpim == null) return 0;
         ActionResult actionResult = cpim.interactEntity(client.player, target, hand);
         sendFeedback(context, actionResult);
-        return actionResult != null && actionResult.isAccepted() ? 1 : 0;
+        return CommandUtil.success(actionResult != null && actionResult.isAccepted());
     }
 
     public static int executeItem(CommandContext<FabricClientCommandSource> context, Object[] args) {
@@ -79,7 +80,7 @@ public class InteractCommand {
         if (cpim == null) return 0;
         ActionResult actionResult = cpim.interactItem(client.player, hand);
         sendFeedback(context, actionResult);
-        return actionResult != null && actionResult.isAccepted() ? 1 : 0;
+        return CommandUtil.success(actionResult != null && actionResult.isAccepted());
     }
 
     public static int executeCrosshairTarget(CommandContext<FabricClientCommandSource> context) {
@@ -102,7 +103,7 @@ public class InteractCommand {
                                     client.player.swingHand(hand);
                                 }
                                 sendFeedback(context, actionResult);
-                                return 1;
+                                return Command.SINGLE_SUCCESS;
                             }
                             break;
                         case BLOCK:
@@ -117,12 +118,12 @@ public class InteractCommand {
                                     }
                                 }
                                 sendFeedback(context, actionResult2);
-                                return 1;
+                                return Command.SINGLE_SUCCESS;
                             }
 
                             if (actionResult2 instanceof ActionResult.Fail) {
                                 sendFeedback(context, actionResult2);
-                                return 1;
+                                return Command.SINGLE_SUCCESS;
                             }
                     }
                 }
@@ -134,12 +135,12 @@ public class InteractCommand {
 
                     client.gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
                     sendFeedback(context, success3);
-                    return 1;
+                    return Command.SINGLE_SUCCESS;
                 }
             }
         }
         context.getSource().sendFeedback(Text.translatable("command.mdt.interact.both_pass"));
-        return 1;
+        return 0;
     }
 
     public enum HandSI implements StringIdentifiable {

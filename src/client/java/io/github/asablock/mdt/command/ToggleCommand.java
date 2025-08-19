@@ -54,7 +54,7 @@ public class ToggleCommand {
         @Override
         public int run(CommandContext<FabricClientCommandSource> context) {
             context.getSource().sendFeedback(Text.translatable("command.mdt.toggle.query.success", toggle.getName(), toggle.valueToString()));
-            return 1;
+            return Command.SINGLE_SUCCESS;
         }
     }
 
@@ -73,7 +73,7 @@ public class ToggleCommand {
         @Override
         public int run(CommandContext<FabricClientCommandSource> context) {
             context.getSource().sendFeedback(Text.literal(toggle.getName() + ": ").append(toggle.getDescription()));
-            return 1;
+            return Command.SINGLE_SUCCESS;
         }
     }
 
@@ -86,7 +86,7 @@ public class ToggleCommand {
     private static int executeReload(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         try (BufferedReader br = Files.newBufferedReader(Mdt.config)) {
             ToggleSerializer.readToggles(br);
-            return 1;
+            return Command.SINGLE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace(new PrintWriter(IOUtil.getTextWriter(context.getSource()::sendError)));
             Mdt.LOGGER.error("Cannot read config", e);
@@ -97,7 +97,7 @@ public class ToggleCommand {
     private static int executeSave(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         try (BufferedWriter bw = Files.newBufferedWriter(Mdt.config)) {
             ToggleSerializer.saveToggles(bw);
-            return 1;
+            return Command.SINGLE_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace(new PrintWriter(IOUtil.getTextWriter(context.getSource()::sendError)));
             Mdt.LOGGER.error("Cannot save config", e);

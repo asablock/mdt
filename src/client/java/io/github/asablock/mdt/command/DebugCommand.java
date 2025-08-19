@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -26,6 +27,6 @@ public class DebugCommand {
         } else {
             context.getSource().sendFeedback(Text.literal("null"));
         }
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 }

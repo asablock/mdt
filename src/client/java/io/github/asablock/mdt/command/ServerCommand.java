@@ -3,6 +3,7 @@ package io.github.asablock.mdt.command;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -29,7 +30,7 @@ public class ServerCommand {
             ServerInfo serverInfo = cpnh.getServerInfo();
             if (serverInfo != null) {
                 context.getSource().sendFeedback(Text.translatable("command.mdt.server.ip.success", serverInfo.address));
-                return 1;
+                return Command.SINGLE_SUCCESS;
             } else {
                 context.getSource().sendError(Text.translatable("command.mdt.server.ip.null_server_info"));
             }

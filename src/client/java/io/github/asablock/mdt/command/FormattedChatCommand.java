@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -26,28 +27,28 @@ public class FormattedChatCommand {
     public static int executeAppend(CommandContext<FabricClientCommandSource> context) {
         String chat = StringArgumentType.getString(context, "chat");
         STRING_BUILDER.append(chat);
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 
     public static int executePreview(CommandContext<FabricClientCommandSource> context) {
         context.getSource().sendFeedback(Text.literal(STRING_BUILDER.toString()));
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 
     public static int executeAddFormat(CommandContext<FabricClientCommandSource> context) {
         Formatting formatting = context.getArgument("format", Formatting.class);
         STRING_BUILDER.append(formatting);
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 
     public static int executeSend(CommandContext<FabricClientCommandSource> context) {
         context.getSource().getClient().getNetworkHandler().sendChatMessage(STRING_BUILDER.toString());
         STRING_BUILDER.setLength(0);
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 
     public static int executeClear(CommandContext<FabricClientCommandSource> context) {
         STRING_BUILDER.setLength(0);
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 }

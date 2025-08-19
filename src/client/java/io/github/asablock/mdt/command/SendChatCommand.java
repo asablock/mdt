@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -15,6 +16,6 @@ public class SendChatCommand {
     public static int execute(CommandContext<FabricClientCommandSource> context) {
         String content = StringArgumentType.getString(context, "content");
         context.getSource().getClient().getNetworkHandler().sendChatMessage(content);
-        return 1;
+        return Command.SINGLE_SUCCESS;
     }
 }

@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.util;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -83,5 +84,9 @@ public final class CommandUtil {
 
             int run(CommandContext<S> context, Object[] args) throws CommandSyntaxException;
         }
+    }
+
+    public static int success(boolean bl) {
+        return bl ? Command.SINGLE_SUCCESS : 0;
     }
 }

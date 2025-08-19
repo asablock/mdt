@@ -1,5 +1,6 @@
 package io.github.asablock.mdt.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -16,7 +17,7 @@ public class RespawnCommand {
         ClientPlayerEntity player = context.getSource().getClient().player;
         if (player != null) {
             player.requestRespawn();
-            return 1;
+            return Command.SINGLE_SUCCESS;
         } else {
             return 0;
         }
