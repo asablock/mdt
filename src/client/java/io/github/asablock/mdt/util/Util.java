@@ -18,9 +18,9 @@ public final class Util {
 
     public static Text swingSourceToText(ActionResult.SwingSource swingSource) {
         return Text.translatable(switch (swingSource) {
-            case NONE -> "none";
-            case CLIENT -> "client";
-            case SERVER -> "server";
+            case NONE -> "mdt.none";
+            case CLIENT -> "mdt.client";
+            case SERVER -> "mdt.server";
         });
     }
 
