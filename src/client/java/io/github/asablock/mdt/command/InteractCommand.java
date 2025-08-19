@@ -10,6 +10,7 @@ import io.github.asablock.mdt.command.argument.ClientBlockPosArgumentType;
 import io.github.asablock.mdt.util.CommandUtil;
 import io.github.asablock.mdt.command.argument.ClientEntityArgumentType;
 import io.github.asablock.mdt.command.argument.PEnumArgumentType;
+import io.github.asablock.mdt.util.Util;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -27,7 +28,7 @@ import net.minecraft.util.math.Direction;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 public class InteractCommand {
-    public static final ArgumentType<HandSI> HAND_ARGUMENT_TYPE = new PEnumArgumentType<>(HandSI.class);
+    public static final ArgumentType<HandSI> HAND_ARGUMENT_TYPE = new PEnumArgumentType<>(HandSI.class, HandSI.CODEC);
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(literal("minteract")
@@ -35,6 +36,10 @@ public class InteractCommand {
                 .then(literal("entity").then(CommandUtil.chainedCommandBuilder(argument("target", ClientEntityArgumentType.entity())).append("hand", HandSI.MAIN_HAND, HAND_ARGUMENT_TYPE).executes(InteractCommand::executeEntity)))
                 .then(CommandUtil.chainedCommandBuilder(literal("item")).append("hand", HandSI.MAIN_HAND, HAND_ARGUMENT_TYPE).executes(InteractCommand::executeItem))
                 .then(literal("crosshairtarget").executes(InteractCommand::executeCrosshairTarget)));
+    }
+
+    private static void sendFeedback(CommandContext<FabricClientCommandSource> context, ActionResult actionResult) {
+        context.getSource().sendFeedback(Text.translatable("command.mdt.interact.used_with_result", actionResult != null ? Util.actionResultToText(actionResult) : null));
     }
 
     public static int executeBlock(CommandContext<FabricClientCommandSource> context, Object[] args) {
@@ -50,7 +55,7 @@ public class InteractCommand {
         ClientPlayerInteractionManager cpim = client.interactionManager;
         if (cpim == null) return 0;
         ActionResult actionResult = cpim.interactBlock(client.player, hand, blockHitResult);
-        context.getSource().sendFeedback(Text.literal(String.valueOf(actionResult)));
+        sendFeedback(context, actionResult);
         return actionResult != null && actionResult.isAccepted() ? 1 : 0;
     }
 
@@ -62,7 +67,7 @@ public class InteractCommand {
         ClientPlayerInteractionManager cpim = client.interactionManager;
         if (cpim == null) return 0;
         ActionResult actionResult = cpim.interactEntity(client.player, target, hand);
-        context.getSource().sendFeedback(Text.literal(String.valueOf(actionResult)));
+        sendFeedback(context, actionResult);
         return actionResult != null && actionResult.isAccepted() ? 1 : 0;
     }
 
@@ -73,7 +78,7 @@ public class InteractCommand {
         ClientPlayerInteractionManager cpim = client.interactionManager;
         if (cpim == null) return 0;
         ActionResult actionResult = cpim.interactItem(client.player, hand);
-        context.getSource().sendFeedback(Text.literal(String.valueOf(actionResult)));
+        sendFeedback(context, actionResult);
         return actionResult != null && actionResult.isAccepted() ? 1 : 0;
     }
 
@@ -96,7 +101,7 @@ public class InteractCommand {
                                 if (success.swingSource() == ActionResult.SwingSource.CLIENT) {
                                     client.player.swingHand(hand);
                                 }
-                                context.getSource().sendFeedback(Text.literal("Used!"));
+                                sendFeedback(context, actionResult);
                                 return 1;
                             }
                             break;
@@ -111,12 +116,12 @@ public class InteractCommand {
                                         client.gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
                                     }
                                 }
-                                context.getSource().sendFeedback(Text.literal("Used!"));
+                                sendFeedback(context, actionResult2);
                                 return 1;
                             }
 
                             if (actionResult2 instanceof ActionResult.Fail) {
-                                context.getSource().sendFeedback(Text.literal("Used!"));
+                                sendFeedback(context, actionResult2);
                                 return 1;
                             }
                     }
@@ -128,12 +133,12 @@ public class InteractCommand {
                     }
 
                     client.gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
-                    context.getSource().sendFeedback(Text.literal("Used!"));
+                    sendFeedback(context, success3);
                     return 1;
                 }
             }
         }
-        context.getSource().sendFeedback(Text.literal("Used!"));
+        context.getSource().sendFeedback(Text.translatable("command.mdt.interact.both_pass"));
         return 1;
     }
 
