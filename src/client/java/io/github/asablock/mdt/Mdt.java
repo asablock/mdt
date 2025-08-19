@@ -73,6 +73,7 @@ public class Mdt implements ClientModInitializer {
 			DebugCommand.register(dispatcher);
 			ScoreboardCommand.register(dispatcher);
 			FormattedChatCommand.register(dispatcher);
+			MdtCommand.register(dispatcher);
 		});
 
 		// Save config on client stop

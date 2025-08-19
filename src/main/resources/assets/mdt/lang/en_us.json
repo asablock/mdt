@@ -39,5 +39,7 @@
   "mdt.actionResult.success": "Success(swing source: %1$s, item context: (increment stat: %2$s, new hand stack: %3$s))",
   "mdt.none": "None",
   "mdt.client": "Client",
-  "mdt.server": "Server"
+  "mdt.server": "Server",
+  "command.mdt.mdt.about": "mdt (version %1$s) by %2$s distributed under GNU General Public License v3.0",
+  "command.mdt.mdt.github": "GitHub: %1$s"
 }

@@ -39,5 +39,7 @@
   "mdt.actionResult.success": "成功(摆手源: %1$s, 物品上下文: (增加统计数据: %2$s, 更新后的手持物品堆叠: %3$s))",
   "mdt.none": "无",
   "mdt.client": "客户端",
-  "mdt.server": "服务器"
+  "mdt.server": "服务器",
+  "command.mdt.mdt.about": "mdt (版本 %1$s) by %2$s 遵循 GNU General Public License v3.0 许可证分发",
+  "command.mdt.mdt.github": "GitHub: %1$s"
 }
