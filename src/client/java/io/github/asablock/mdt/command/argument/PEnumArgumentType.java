@@ -11,6 +11,10 @@ public class PEnumArgumentType<T extends Enum<T> & StringIdentifiable> extends E
         super(codec, valuesSupplier);
     }
 
+    public PEnumArgumentType(Class<T> clazz, Codec<T> codec) {
+        super(codec, clazz::getEnumConstants);
+    }
+
     public PEnumArgumentType(Class<T> clazz) {
         super(StringIdentifiable.createCodec(clazz::getEnumConstants), clazz::getEnumConstants);
     }
