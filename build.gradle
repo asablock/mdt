@@ -2,6 +2,7 @@ plugins {
 	id 'fabric-loom' version '1.9-SNAPSHOT'
 	id 'maven-publish'
 	id 'com.modrinth.minotaur' version '2.+'
+	id "com.github.breadmoirai.github-release" version "2.4.1"
 }
 
 version = project.mod_version
@@ -71,6 +72,10 @@ jar {
 	}
 }
 
+tasks.remapJar.configure {
+	archiveFileName = "${project.archives_base_name}-${project.version}-${project.minecraft_version}.jar"
+}
+
 // configure the maven publication
 publishing {
 	publications {
@@ -103,4 +108,12 @@ modrinth {
 		required.project "fabric-api" // Creates a new required dependency on Fabric API
 	}
 	syncBodyFrom = rootProject.file("README.md").text
+}
+
+githubRelease {
+	token System.getenv("GITHUB_TOKEN")
+	owner "asablock"
+	repo "mdt"
+	targetCommitish "1.21.4"
+	releaseAssets remapJar.outputs
 }
