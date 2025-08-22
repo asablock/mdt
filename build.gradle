@@ -117,4 +117,5 @@ githubRelease {
 	repo "mdt"
 	targetCommitish "1.21.4"
 	releaseAssets remapJar.outputs
+	body project.file("CHANGELOG.md").text
 }
