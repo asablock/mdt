@@ -38,3 +38,6 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+
+!/.idea/copyright/mdt.xml
+!/.idea/copyright/profiles_settings.xml
