@@ -134,6 +134,6 @@ githubRelease {
 	owner "asablock"
 	repo "mdt"
 	targetCommitish "1.21.4"
-	releaseAssets remapJar.outputs
+	releaseAssets remapJar.outputs, jar.outputs
 	body project.file("CHANGELOG.md").text
 }
