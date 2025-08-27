@@ -20,7 +20,7 @@ plugins {
 	id 'fabric-loom' version '1.9-SNAPSHOT'
 	id 'maven-publish'
 	id 'com.modrinth.minotaur' version '2.+'
-	id "com.github.breadmoirai.github-release" version "2.4.1"
+	id "com.github.breadmoirai.github-release" version "2.5.2"
 }
 
 version = project.mod_version
@@ -130,10 +130,10 @@ modrinth {
 }
 
 githubRelease {
-	token(project.hasProperty('githubKey') ? project.githubKey : (System.getenv("GITHUB_TOKEN") ?: ''))
-	owner "asablock"
-	repo "mdt"
-	targetCommitish "1.21.4"
+	token project.hasProperty('githubKey') ? project.githubKey : (System.getenv("GITHUB_TOKEN") ?: '')
+	owner = "asablock"
+	repo = "mdt"
+	targetCommitish = "1.21.4"
 	releaseAssets remapJar.outputs, jar.outputs
-	body project.file("CHANGELOG.md").text
+	body = project.file("CHANGELOG.md").text
 }
