@@ -36,7 +36,7 @@ public abstract class MixinChatScreen {
 
     @Inject(method = "init", at = @At("TAIL"), order = 1100)
     private void disableChatMaxLength(CallbackInfo ci) {
-        if (Toggles.chatMaxLengthBehavior.get().shallRestrictFieldMaxLength()) {
+        if (!Toggles.chatMaxLengthBehavior.get().shallRestrictFieldMaxLength()) {
             chatField.setMaxLength(Integer.MAX_VALUE);
         }
     }
