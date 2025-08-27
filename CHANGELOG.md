@@ -1,3 +1,4 @@
 # Improvements
 
-- Changed implementation of `chatMaxLengthBehavior` in order to prevent ViaFabricPlus from changing the chat max length back.
+- Fixed the wrong logic of `chatMaxLengthBehavior` of the previous version.
+- Added `sendByParts` option for `chatMaxLengthBehavior`, and two extra toggles for it: `sendByPartsPartSize` and `sendByPartsIntervalMillis`.
