@@ -90,6 +90,10 @@ jar {
 	}
 }
 
+tasks.jar.configure {
+	archiveFileName = "${project.archives_base_name}-${project.version}-${project.minecraft_version}-dev.jar"
+}
+
 tasks.remapJar.configure {
 	archiveFileName = "${project.archives_base_name}-${project.version}-${project.minecraft_version}.jar"
 }
