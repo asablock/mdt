@@ -47,6 +47,8 @@ public final class Toggles {
     public static final Toggle<Boolean> chatOnDeath = reg(ofBool(root, "chatOnDeath", false));
     public static final Toggle<Boolean> disableNightVision = reg(ofBool(root, "disableNightVision", false));
     public static final Toggle<Boolean> showBarrier = reg(ofBool(root, "showBarrier", false));
+    public static final Toggle<Integer> sendByPartsIntervalMillis = reg(ofInt(root, "sendByPartsIntervalMillis", 400, 0, Integer.MAX_VALUE));
+    public static final Toggle<Integer> sendByPartsPartSize = reg(ofInt(root, "sendByPartsPartSize", 256, 1, Integer.MAX_VALUE));
 
     public static final ToggleDirectory sysio = regn(ofDir(root, "sysio"));
 

@@ -114,6 +114,8 @@ public class Mdt implements ClientModInitializer {
 		ClientPlayerEvents.PLAYER_UNLOADING.register(PlayerAlert::playerUnloading);
 
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register(PlayerAlert::afterWorldChange);
+
+		ClientDelayedTask.registerEvent();
 	}
 
 	@SuppressWarnings("unchecked")

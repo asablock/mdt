@@ -20,10 +20,12 @@ package io.github.asablock.mdt.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import io.github.asablock.mdt.ClientDelayedTask;
 import io.github.asablock.mdt.toggle.Toggles;
+import io.github.asablock.mdt.toggle.enums.ChatMaxLengthBehavior;
+import io.github.asablock.mdt.util.Util;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,8 +43,32 @@ public abstract class MixinChatScreen {
         }
     }
 
-    @WrapOperation(method = "sendMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendChatMessage(Ljava/lang/String;)V"))
-    private void sendChatMessageRestrict(ClientPlayNetworkHandler instance, String content, Operation<Void> original) {
-        original.call(instance, Toggles.chatMaxLengthBehavior.get().shallRestrictAfterSending() ? (content.length() > 256 ? content.substring(0, 256) : content) : content);
+    @WrapOperation(method = "sendMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatScreen;normalize(Ljava/lang/String;)Ljava/lang/String;"))
+    private String noNormalize(ChatScreen instance, String chatText, Operation<String> original) {
+        return Toggles.chatMaxLengthBehavior.get().shallRestrictAfterSending() ? original.call(instance, chatText) : chatText;
+    }
+
+    @Inject(method = "sendMessage", at = @At("HEAD"), cancellable = true)
+    private void sendByParts(String chatText, boolean addToHistory, CallbackInfo ci) {
+        if (Toggles.chatMaxLengthBehavior.get() == ChatMaxLengthBehavior.SEND_BY_PARTS && chatText.length() > Toggles.sendByPartsPartSize.get()) {
+            long now = System.currentTimeMillis();
+            int partSize = Toggles.sendByPartsPartSize.get();
+            int interval = Toggles.sendByPartsIntervalMillis.get();
+            int chunks = (chatText.length() - 1) / partSize + 1;
+            for (int i = 0; i < chunks - 1; i++) {
+                final int index = i;
+                ClientDelayedTask task = new ClientDelayedTask(now + (long) interval * i, client -> {
+                    String chunk = chatText.substring(partSize * index, partSize * index + partSize);
+                    Util.sendChat(chunk, addToHistory);
+                });
+                ClientDelayedTask.schedule(task);
+            }
+            ClientDelayedTask task = new ClientDelayedTask(now + (long) interval * (chunks - 1), client -> {
+                String chunk = chatText.substring(partSize * (chunks - 1));
+                Util.sendChat(chunk, addToHistory);
+            });
+            ClientDelayedTask.schedule(task);
+            ci.cancel();
+        }
     }
 }

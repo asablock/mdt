@@ -65,4 +65,18 @@ public final class Util {
             }
         }
     }
+
+    public static void sendChat(String chatText, boolean addToHistory) {
+        if (!chatText.isEmpty()) {
+            if (addToHistory) {
+                client.inGameHud.getChatHud().addToMessageHistory(chatText);
+            }
+
+            if (chatText.startsWith("/")) {
+                client.player.networkHandler.sendChatCommand(chatText.substring(1));
+            } else {
+                client.player.networkHandler.sendChatMessage(chatText);
+            }
+        }
+    }
 }
