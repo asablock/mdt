@@ -23,9 +23,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
-
-import java.net.URI;
+import net.minecraft.util.Formatting;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
@@ -34,11 +34,12 @@ public class MdtCommand {
         dispatcher.register(literal("mdt").executes(MdtCommand::executes));
     }
 
-    private static final URI GITHUB_URI = URI.create("https://github.com/asablock/mdt");
+    private static final String GITHUB_URL = "https://github.com/asablock/mdt";
+    private static final String ASABLOCK_URL = "https://github.com/asablock";
 
     public static int executes(CommandContext<FabricClientCommandSource> context) {
-        context.getSource().sendFeedback(Text.translatable("command.mdt.mdt.about", FabricLoader.getInstance().getModContainer("mdt").orElseThrow().getMetadata().getVersion().getFriendlyString(), "asablock"));
-        context.getSource().sendFeedback(Text.translatable("command.mdt.mdt.github", Text.of(GITHUB_URI)));
+        context.getSource().sendFeedback(Text.translatable("command.mdt.mdt.about", FabricLoader.getInstance().getModContainer("mdt").orElseThrow().getMetadata().getVersion().getFriendlyString(), Text.literal("asablock").formatted(Formatting.UNDERLINE).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, ASABLOCK_URL)))));
+        context.getSource().sendFeedback(Text.translatable("command.mdt.mdt.github", Text.literal(GITHUB_URL).formatted(Formatting.UNDERLINE).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, GITHUB_URL)))));
         return Command.SINGLE_SUCCESS;
     }
 }
