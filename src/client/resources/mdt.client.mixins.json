@@ -16,9 +16,12 @@
     "MixinLightmapTextureManager",
     "MixinWorldRenderer",
     "ScreenInvoker",
+    "ServerResourcePackLoaderAccessor",
+    "ServerResourcePackManagerAccessor",
+    "ServerResourcePackManagerPackEntryAccessor",
     "WorldInvoker"
   ],
   "injectors": {
     "defaultRequire": 1
-	}
+  }
 }

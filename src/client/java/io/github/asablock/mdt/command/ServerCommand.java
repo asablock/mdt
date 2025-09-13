@@ -18,6 +18,7 @@
 
 package io.github.asablock.mdt.command;
 
+import com.google.common.hash.HashCode;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
@@ -25,32 +26,47 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.asablock.mdt.mixin.ServerResourcePackLoaderAccessor;
+import io.github.asablock.mdt.mixin.ServerResourcePackManagerAccessor;
+import io.github.asablock.mdt.mixin.ServerResourcePackManagerPackEntryAccessor;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.client.resource.server.ServerResourcePackManager;
+import net.minecraft.command.argument.UuidArgumentType;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 public class ServerCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(literal("mserver")
-                .then(literal("ip").executes(ServerCommand::executeIp))
-                .then(literal("playerproperties").then(argument("name", StringArgumentType.word()).executes(ServerCommand::executePlayerProfile))));
+                .then(literal("address").executes(ServerCommand::executeAddress))
+                .then(literal("playerproperties").then(argument("name", StringArgumentType.word()).executes(ServerCommand::executePlayerProfile)))
+                .then(literal("resourcepacks")
+                        .then(literal("list").executes(ServerCommand::executeResourcePacksList))
+                        .then(literal("path").then(argument("id", UuidArgumentType.uuid()).executes(ServerCommand::executeResourcePacksPath)))
+                )
+        );
     }
 
-    public static int executeIp(CommandContext<FabricClientCommandSource> context) {
+    public static int executeAddress(CommandContext<FabricClientCommandSource> context) {
         ClientPlayNetworkHandler cpnh = context.getSource().getClient().getNetworkHandler();
         if (cpnh != null) {
             ServerInfo serverInfo = cpnh.getServerInfo();
             if (serverInfo != null) {
-                context.getSource().sendFeedback(Text.translatable("command.mdt.server.ip.success", serverInfo.address));
+                context.getSource().sendFeedback(Text.translatable("command.mdt.server.address.success", serverInfo.address));
                 return Command.SINGLE_SUCCESS;
             } else {
-                context.getSource().sendError(Text.translatable("command.mdt.server.ip.null_server_info"));
+                context.getSource().sendError(Text.translatable("command.mdt.server.address.null_server_info"));
             }
         } else {
             context.getSource().sendError(Text.translatable("command.mdt.server.not_in_game"));
@@ -80,5 +96,42 @@ public class ServerCommand {
             context.getSource().sendError(Text.translatable("command.mdt.server.not_in_game"));
         }
         return 0;
+    }
+
+    public static int executeResourcePacksList(CommandContext<FabricClientCommandSource> context) {
+        ServerResourcePackManager packManager = ((ServerResourcePackLoaderAccessor) context.getSource().getClient().getServerResourcePackProvider()).getManager();
+        List<ServerResourcePackManager.PackEntry> packs = ((ServerResourcePackManagerAccessor) packManager).getPacks();
+        context.getSource().sendFeedback(Text.translatable("command.mdt.server.resourcepacks.list.count", packs.size()));
+        for (ServerResourcePackManager.PackEntry pack : packs) {
+            ServerResourcePackManagerPackEntryAccessor accessor = (ServerResourcePackManagerPackEntryAccessor) pack;
+            UUID id = accessor.getId();
+            HashCode hashCode = accessor.getHashCode();
+            Path path = accessor.getPath();
+            Text pathText = Text.literal(path.toString())
+                    .formatted(Formatting.UNDERLINE)
+                    .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path.toAbsolutePath().toString())));
+            context.getSource().sendFeedback(Text.translatable("command.mdt.server.resourcepacks.list.line", id, hashCode, pathText));
+        }
+        return packs.size();
+    }
+
+    public static int executeResourcePacksPath(CommandContext<FabricClientCommandSource> context) {
+        UUID uuid = context.getArgument("id", UUID.class);
+        ServerResourcePackManager packManager = ((ServerResourcePackLoaderAccessor) context.getSource().getClient().getServerResourcePackProvider()).getManager();
+        ServerResourcePackManager.PackEntry pack = ((ServerResourcePackManagerAccessor) packManager).invokeGet(uuid);
+        if (pack != null) {
+            ServerResourcePackManagerPackEntryAccessor accessor = (ServerResourcePackManagerPackEntryAccessor) pack;
+            UUID id = accessor.getId();
+            HashCode hashCode = accessor.getHashCode();
+            Path path = accessor.getPath();
+            Text pathText = Text.literal(path.toString())
+                    .formatted(Formatting.UNDERLINE)
+                    .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path.toAbsolutePath().toString())));
+            context.getSource().sendFeedback(Text.translatable("command.mdt.server.resourcepacks.list.line", id, hashCode, pathText));
+            return Command.SINGLE_SUCCESS;
+        } else {
+            context.getSource().sendError(Text.translatable("command.mdt.server.resourcepacks.path.not_found"));
+            return 0;
+        }
     }
 }
