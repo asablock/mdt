@@ -116,6 +116,8 @@ public class Mdt implements ClientModInitializer {
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register(PlayerAlert::afterWorldChange);
 
 		ClientDelayedTask.registerEvent();
+
+		MdtKeyBindings.init();
 	}
 
 	@SuppressWarnings("unchecked")

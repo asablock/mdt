@@ -46,5 +46,7 @@
   "mdt.client": "Client",
   "mdt.server": "Server",
   "command.mdt.mdt.about": "mdt (version %1$s) by %2$s distributed under GNU General Public License v3.0",
-  "command.mdt.mdt.github": "GitHub: %1$s"
+  "command.mdt.mdt.github": "GitHub: %1$s",
+  "key.category.mdt": "mdt",
+  "key.mdt.interact": "Interact"
 }

@@ -19,9 +19,14 @@
 package io.github.asablock.mdt.util;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 
 public final class Util {
     private static final MinecraftClient client = MinecraftClient.getInstance();
@@ -78,5 +83,57 @@ public final class Util {
                 client.player.networkHandler.sendChatMessage(chatText);
             }
         }
+    }
+
+    public static ActionResult applyHitResult(HitResult hitResult) {
+        if (hitResult != null) {
+            for (Hand hand : Hand.values()) {
+                ItemStack itemStack = client.player.getStackInHand(hand);
+                switch (hitResult.getType()) {
+                    case ENTITY:
+                        EntityHitResult entityHitResult = (EntityHitResult) hitResult;
+                        Entity entity = entityHitResult.getEntity();
+                        ActionResult actionResult = client.interactionManager.interactEntityAtLocation(client.player, entity, entityHitResult, hand);
+                        if (!actionResult.isAccepted()) {
+                            actionResult = client.interactionManager.interactEntity(client.player, entity, hand);
+                        }
+
+                        if (actionResult instanceof ActionResult.Success success) {
+                            if (success.swingSource() == ActionResult.SwingSource.CLIENT) {
+                                client.player.swingHand(hand);
+                            }
+                            return actionResult;
+                        }
+                        break;
+                    case BLOCK:
+                        BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+                        int i = itemStack.getCount();
+                        ActionResult actionResult2 = client.interactionManager.interactBlock(client.player, hand, blockHitResult);
+                        if (actionResult2 instanceof ActionResult.Success success2) {
+                            if (success2.swingSource() == ActionResult.SwingSource.CLIENT) {
+                                client.player.swingHand(hand);
+                                if (!itemStack.isEmpty() && (itemStack.getCount() != i || client.interactionManager.hasCreativeInventory())) {
+                                    client.gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
+                                }
+                            }
+                            return actionResult2;
+                        }
+
+                        if (actionResult2 instanceof ActionResult.Fail) {
+                            return actionResult2;
+                        }
+                }
+
+                if (!itemStack.isEmpty() && client.interactionManager.interactItem(client.player, hand) instanceof ActionResult.Success success3) {
+                    if (success3.swingSource() == ActionResult.SwingSource.CLIENT) {
+                        client.player.swingHand(hand);
+                    }
+
+                    client.gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
+                    return success3;
+                }
+            }
+        }
+        return null;
     }
 }
