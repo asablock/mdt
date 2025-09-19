@@ -5,6 +5,7 @@
   "client": [
     "ClientPlayNetworkHandlerAccessor",
     "DefaultPosArgumentAccessor",
+    "KeyBindingAccessor",
     "MinecraftClientInvoker",
     "MixinAbstractClientPlayerEntity",
     "MixinBackgroundRenderer",
@@ -13,6 +14,8 @@
     "MixinClientPlayerEntity",
     "MixinClientWorld",
     "MixinDeathScreen",
+    "MixinItemStack",
+    "MixinKeyboard",
     "MixinLightmapTextureManager",
     "MixinWorldRenderer",
     "ScreenInvoker",

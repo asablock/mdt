@@ -48,5 +48,9 @@
   "command.mdt.mdt.about": "mdt (版本 %1$s) by %2$s 遵循 GNU General Public License v3.0 许可证分发",
   "command.mdt.mdt.github": "GitHub: %1$s",
   "key.category.mdt": "mdt",
-  "key.mdt.interact": "交互"
+  "key.mdt.interact": "交互",
+  "key.mdt.view_data_components": "查看数据组件",
+  "mdt.view_data_components.unknown": "<未知组件>",
+  "mdt.view_data_components.not_encodable": "<组件不可编码: %1$s>",
+  "mdt.view_data_components.press": " (按住 %1$s 键查看组件)"
 }

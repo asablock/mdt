@@ -32,6 +32,10 @@ public final class MdtKeyBindings {
             "key.mdt.interact", GLFW.GLFW_KEY_UNKNOWN, "key.category.mdt"
     ));
 
+    public static final KeyBinding VIEW_DATA_COMPONENTS_KEY = EnhancedKeyBindingHelper.registerScreenKeyBinding(new KeyBinding(
+            "key.mdt.view_data_components", GLFW.GLFW_KEY_UNKNOWN, "key.category.mdt"
+    ));
+
     static void init() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.currentScreen == null) {

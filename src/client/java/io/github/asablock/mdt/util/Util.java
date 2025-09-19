@@ -18,15 +18,26 @@
 
 package io.github.asablock.mdt.util;
 
+import com.mojang.serialization.DataResult;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.Component;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+
+import java.util.Objects;
 
 public final class Util {
     private static final MinecraftClient client = MinecraftClient.getInstance();
@@ -135,5 +146,19 @@ public final class Util {
             }
         }
         return null;
+    }
+
+    public static <T> Text toText(Component<T> component) {
+        ComponentType<T> type = component.type();
+        Identifier id = Registries.DATA_COMPONENT_TYPE.getId(type);
+        MutableText idText = id != null ? Text.literal(id.toString()).formatted(Formatting.GREEN) : Text.translatable("mdt.view_data_components.unknown").formatted(Formatting.RED);
+        DataResult<Text> dataResult = component.encode(Objects.requireNonNull(client.world).getRegistryManager().getOps(NbtOps.INSTANCE)).map(NbtHelper::toPrettyPrintedText);
+        Text nbt;
+        if (dataResult.isSuccess()) {
+            nbt = dataResult.getOrThrow();
+        } else {
+            nbt = Text.translatable("mdt.view_data_components.not_encodable", dataResult.error().orElseThrow().message()).formatted(Formatting.RED);
+        }
+        return idText.append(Text.literal(": ").formatted(Formatting.WHITE)).append(nbt);
     }
 }
