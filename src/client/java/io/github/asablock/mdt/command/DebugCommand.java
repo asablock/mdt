@@ -20,6 +20,7 @@ package io.github.asablock.mdt.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
@@ -31,7 +32,10 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 public class DebugCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(literal("mdebug").then(literal("crosshairTarget").executes(DebugCommand::executeCrosshairTarget)));
+        dispatcher.register(literal("mdebug")
+                .then(literal("crosshairTarget").executes(DebugCommand::executeCrosshairTarget))
+                .then(literal("translate").then(argument("translationkey", StringArgumentType.greedyString()).executes(DebugCommand::executeTranslate)))
+        );
     }
 
     public static int executeCrosshairTarget(CommandContext<FabricClientCommandSource> context) {
@@ -45,6 +49,12 @@ public class DebugCommand {
         } else {
             context.getSource().sendFeedback(Text.literal("null"));
         }
+        return Command.SINGLE_SUCCESS;
+    }
+
+    public static int executeTranslate(CommandContext<FabricClientCommandSource> context) {
+        String translationKey = StringArgumentType.getString(context, "translationkey");
+        context.getSource().sendFeedback(Text.translatable(translationKey));
         return Command.SINGLE_SUCCESS;
     }
 }
