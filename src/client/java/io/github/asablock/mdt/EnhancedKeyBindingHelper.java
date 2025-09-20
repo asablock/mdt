@@ -20,7 +20,6 @@ package io.github.asablock.mdt;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,9 +45,5 @@ public final class EnhancedKeyBindingHelper {
 
     public static KeyBinding registerScreenKeyBinding(KeyBinding keyBinding) {
         return addScreenKeyBinding(KeyBindingHelper.registerKeyBinding(keyBinding));
-    }
-
-    public static boolean isBound(KeyBinding binding) {
-        return KeyBindingHelper.getBoundKeyOf(binding).getCode() != GLFW.GLFW_KEY_UNKNOWN;
     }
 }

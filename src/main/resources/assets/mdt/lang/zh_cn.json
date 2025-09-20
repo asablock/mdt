@@ -50,7 +50,9 @@
   "key.category.mdt": "mdt",
   "key.mdt.interact": "交互",
   "key.mdt.view_data_components": "查看数据组件",
+  "key.mdt.print_data_components_in_chat": "在聊天中打印数据组件",
   "mdt.view_data_components.unknown": "<未知组件>",
   "mdt.view_data_components.not_encodable": "<组件不可编码: %1$s>",
-  "mdt.view_data_components.press": " (按住 %1$s 键查看组件)"
+  "mdt.view_data_components.press": " (按住 %1$s 键)",
+  "mdt.view_data_components.print_in_chat": "按 %1$s 键打印到聊天中"
 }

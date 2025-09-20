@@ -148,7 +148,7 @@ public final class Util {
         return null;
     }
 
-    public static <T> Text toText(Component<T> component) {
+    public static <T> MutableText toText(Component<T> component) {
         ComponentType<T> type = component.type();
         Identifier id = Registries.DATA_COMPONENT_TYPE.getId(type);
         MutableText idText = id != null ? Text.literal(id.toString()).formatted(Formatting.GREEN) : Text.translatable("mdt.view_data_components.unknown").formatted(Formatting.RED);

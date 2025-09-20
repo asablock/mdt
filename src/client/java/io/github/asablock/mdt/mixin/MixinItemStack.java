@@ -21,8 +21,7 @@ package io.github.asablock.mdt.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import io.github.asablock.mdt.EnhancedKeyBindingHelper;
+import io.github.asablock.mdt.Mdt;
 import io.github.asablock.mdt.MdtKeyBindings;
 import io.github.asablock.mdt.util.Util;
 import net.minecraft.component.Component;
@@ -30,6 +29,7 @@ import net.minecraft.component.MergedComponentMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -46,9 +46,14 @@ public class MixinItemStack {
 
     @WrapOperation(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), slice = @Slice(from = @At(value = "CONSTANT", args = "stringValue=item.components")))
     private boolean viewComponents(List<Text> instance, @Coerce Object o, Operation<Boolean> original) {
-        if (MdtKeyBindings.VIEW_DATA_COMPONENTS_KEY.isPressed()) {
+        if (MdtKeyBindings.VIEW_DATA_COMPONENTS.isPressed()) {
+            Mdt.viewDataComponentsStack = (ItemStack) (Object) this;
+            if (!MdtKeyBindings.PRINT_DATA_COMPONENTS_IN_CHAT.isUnbound()) {
+                instance.add(Text.translatable("mdt.view_data_components.print_in_chat", MdtKeyBindings.PRINT_DATA_COMPONENTS_IN_CHAT.getBoundKeyLocalizedText()).formatted(Formatting.YELLOW));
+            }
             for (Component<?> component : components) {
-                instance.add(Util.toText(component));
+                Text text = Util.toText(component);
+                instance.add(text);
             }
             return true;
         } else {
@@ -57,11 +62,11 @@ public class MixinItemStack {
     }
 
     @ModifyExpressionValue(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;", ordinal = 1))
-    private MutableText componentsTextOverride(MutableText original, @Local int i) {
-        if (EnhancedKeyBindingHelper.isBound(MdtKeyBindings.VIEW_DATA_COMPONENTS_KEY)) {
-            return original.append(Text.translatable("mdt.view_data_components.press", MdtKeyBindings.VIEW_DATA_COMPONENTS_KEY.getBoundKeyLocalizedText()));
-        } else {
+    private MutableText componentsTextOverride(MutableText original) {
+        if (MdtKeyBindings.VIEW_DATA_COMPONENTS.isUnbound()) {
             return original;
+        } else {
+            return original.append(Text.translatable("mdt.view_data_components.press", MdtKeyBindings.VIEW_DATA_COMPONENTS.getBoundKeyLocalizedText()));
         }
     }
 }

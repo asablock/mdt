@@ -36,6 +36,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
 import org.slf4j.Logger;
@@ -56,7 +57,8 @@ public class Mdt implements ClientModInitializer {
 	public static final PrintStream LOGGER_OUT_PRINT_STREAM = System.out;
 	public static final PrintStream LOGGER_ERROR_PRINT_STREAM = System.err;
 	public static final InputStream SYSIN = System.in;
-	// These are initialized a little bit earlier than config loading (replaces them)
+
+	public static ItemStack viewDataComponentsStack;
 
 	@Override
 	public void onInitializeClient() {

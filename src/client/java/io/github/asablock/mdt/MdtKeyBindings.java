@@ -22,25 +22,38 @@ import io.github.asablock.mdt.util.Util;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.component.Component;
 import org.lwjgl.glfw.GLFW;
 
 public final class MdtKeyBindings {
     private MdtKeyBindings() {
     }
 
-    public static final KeyBinding INTERACT_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    public static final KeyBinding INTERACT = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.mdt.interact", GLFW.GLFW_KEY_UNKNOWN, "key.category.mdt"
     ));
 
-    public static final KeyBinding VIEW_DATA_COMPONENTS_KEY = EnhancedKeyBindingHelper.registerScreenKeyBinding(new KeyBinding(
+    public static final KeyBinding VIEW_DATA_COMPONENTS = EnhancedKeyBindingHelper.registerScreenKeyBinding(new KeyBinding(
             "key.mdt.view_data_components", GLFW.GLFW_KEY_UNKNOWN, "key.category.mdt"
+    ));
+
+    public static final KeyBinding PRINT_DATA_COMPONENTS_IN_CHAT = EnhancedKeyBindingHelper.registerScreenKeyBinding(new KeyBinding(
+            "key.mdt.print_data_components_in_chat", GLFW.GLFW_KEY_UNKNOWN, "key.category.mdt"
     ));
 
     static void init() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.currentScreen == null) {
-                while (INTERACT_KEY.wasPressed()) {
+                while (INTERACT.wasPressed()) {
                     Util.applyHitResult(client.crosshairTarget);
+                }
+            }
+            while (PRINT_DATA_COMPONENTS_IN_CHAT.wasPressed()) {
+                if (Mdt.viewDataComponentsStack != null) {
+                    for (Component<?> component : Mdt.viewDataComponentsStack.getComponents()) {
+                        Util.sendMessage(Util.toText(component));
+                    }
+                    Mdt.viewDataComponentsStack = null;
                 }
             }
         });

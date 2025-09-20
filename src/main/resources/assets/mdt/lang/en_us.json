@@ -50,7 +50,9 @@
   "key.category.mdt": "mdt",
   "key.mdt.interact": "Interact",
   "key.mdt.view_data_components": "View Data Components",
+  "key.mdt.print_data_components_in_chat": "Print Data Components in Chat",
   "mdt.view_data_components.unknown": "<unknown component>",
   "mdt.view_data_components.not_encodable": "<component not encodable: %1$s>",
-  "mdt.view_data_components.press": " (press %1$s to view components)"
+  "mdt.view_data_components.press": " (hold %1$s)",
+  "mdt.view_data_components.print_in_chat": "Press %1$s to print in chat"
 }
