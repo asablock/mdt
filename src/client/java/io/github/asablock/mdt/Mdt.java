@@ -18,12 +18,15 @@
 
 package io.github.asablock.mdt;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.asablock.mdt.command.*;
 import io.github.asablock.mdt.command.argument.ClientEntitySelectorOptions;
 import io.github.asablock.mdt.event.ClientPlayerEvents;
 import io.github.asablock.mdt.toggle.ToggleSerializer;
 import io.github.asablock.mdt.toggle.Toggles;
+import io.github.asablock.mdt.util.Util;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -42,12 +45,10 @@ import net.minecraft.world.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class Mdt implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Minecraft Client Debug Toolkit");
@@ -57,6 +58,8 @@ public class Mdt implements ClientModInitializer {
 	public static final PrintStream LOGGER_OUT_PRINT_STREAM = System.out;
 	public static final PrintStream LOGGER_ERROR_PRINT_STREAM = System.err;
 	public static final InputStream SYSIN = System.in;
+
+	public static final Gson PRETTY_PRINTING_GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	public static ItemStack viewDataComponentsStack;
 
@@ -75,7 +78,14 @@ public class Mdt implements ClientModInitializer {
             }
         }
 
-		// Redirect System.in
+		// Load notes
+        try {
+            NotesCommand.load(Util.getWrapperLookup());
+        } catch (IOException e) {
+			LOGGER.error("Cannot load notes", e);
+        }
+
+        // Redirect System.in
 		System.setIn(SystemCommand.SYSIN);
 
 		// Register ClientEntitySelectorOptions
@@ -94,6 +104,8 @@ public class Mdt implements ClientModInitializer {
 			ScoreboardCommand.register(dispatcher);
 			FormattedChatCommand.register(dispatcher);
 			MdtCommand.register(dispatcher);
+			NoteCommand.register(dispatcher, registryAccess);
+			NotesCommand.register(dispatcher);
 		});
 
 		// Save config on client stop
@@ -102,6 +114,11 @@ public class Mdt implements ClientModInitializer {
                 ToggleSerializer.saveToggles(bw);
             } catch (Exception e) {
                 LOGGER.error("Cannot save config", e);
+            }
+            try {
+                NotesCommand.save(Objects.requireNonNull(client.world).getRegistryManager());
+            } catch (IOException e) {
+                LOGGER.error("Cannot save notes", e);
             }
         });
 

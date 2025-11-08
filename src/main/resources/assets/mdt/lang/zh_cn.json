@@ -54,5 +54,13 @@
   "mdt.view_data_components.unknown": "<未知组件>",
   "mdt.view_data_components.not_encodable": "<组件不可编码: %1$s>",
   "mdt.view_data_components.press": " (按住 %1$s 键)",
-  "mdt.view_data_components.print_in_chat": "按 %1$s 键打印到聊天中"
+  "mdt.view_data_components.print_in_chat": "按 %1$s 键打印到聊天中",
+  "command.mdt.note.add": "笔记已添加: %1$s",
+  "command.mdt.note.no_subject": "没有找到关于 %1$s 的笔记",
+  "command.mdt.note.read.all.success": "找到 %1$s 条与 %2$s 相关的笔记:",
+  "command.mdt.note.no": "笔记不存在",
+  "command.mdt.note.delete": "笔记已删除: %1$s",
+  "command.mdt.note.clear_all": "清除了 %1$s 条与 %2$s 有关的笔记",
+  "command.mdt.notes.saved": "笔记已保存",
+  "command.mdt.notes.reloaded": "笔记已重新加载"
 }

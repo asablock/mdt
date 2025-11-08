@@ -26,7 +26,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.Registries;
+import net.minecraft.registry.*;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -38,6 +38,9 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public final class Util {
     private static final MinecraftClient client = MinecraftClient.getInstance();
@@ -160,5 +163,30 @@ public final class Util {
             nbt = Text.translatable("mdt.view_data_components.not_encodable", dataResult.error().orElseThrow().message()).formatted(Formatting.RED);
         }
         return idText.append(Text.literal(": ").formatted(Formatting.WHITE)).append(nbt);
+    }
+
+    public static DynamicRegistryManager getWorldDynamicRegistryManager() {
+        return Objects.requireNonNull(MinecraftClient.getInstance().world).getRegistryManager();
+    }
+
+    private static final RegistryWrapper.WrapperLookup WRAPPER_LOOKUP = new RegistryWrapper.WrapperLookup() {
+        @Override
+        public Stream<RegistryKey<? extends Registry<?>>> streamAllRegistryKeys() {
+            return Registries.REGISTRIES.getKeys().stream().map(Function.identity()); // weird but works
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> Optional<? extends RegistryWrapper.Impl<T>> getOptional(RegistryKey<? extends Registry<? extends T>> registryRef) {
+            return Optional.ofNullable((RegistryWrapper.Impl<T>) ((Registry) Registries.REGISTRIES).get(registryRef));
+        }
+    };
+
+    public static RegistryWrapper.WrapperLookup getWrapperLookup() {
+        return WRAPPER_LOOKUP;
+    }
+
+    public static String quotedEscape(String string) {
+        return '"' + string.replace("\"", "\\\"") + '"';
     }
 }

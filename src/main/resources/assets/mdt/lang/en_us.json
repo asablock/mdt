@@ -54,5 +54,13 @@
   "mdt.view_data_components.unknown": "<unknown component>",
   "mdt.view_data_components.not_encodable": "<component not encodable: %1$s>",
   "mdt.view_data_components.press": " (hold %1$s)",
-  "mdt.view_data_components.print_in_chat": "Press %1$s to print in chat"
+  "mdt.view_data_components.print_in_chat": "Press %1$s to print in chat",
+  "command.mdt.note.add": "Note added: %1$s",
+  "command.mdt.note.no_subject": "No notes relating to %1$s",
+  "command.mdt.note.read.all.success": "Found %1$s note(s) relating to %2$s:",
+  "command.mdt.note.no": "No such note",
+  "command.mdt.note.delete": "Note deleted: %1$s",
+  "command.mdt.note.clear_all": "Cleared %1$s note(s) relating to %2$s",
+  "command.mdt.notes.saved": "Note saved",
+  "command.mdt.notes.reloaded": "Note reloaded"
 }
